@@ -11,20 +11,26 @@ base_activity = {
         },
         'assets': {
             'small_text': 'Vim',
-            'small_image': 'vim_logo',
+            'small_image': 'vim',
             'large_text': 'Vim',
             'large_image': 'vim_logo'
         }
     }
 
-client_id = '425602550470017024'
+client_id = '439476230543245312'
 
 has_thumbnail = [
-    'css',
+    'c',
+    'cr',
+    'hs',
+    'json',
+    'nim',
+    'rb',
+    'cpp',
+    'go',
     'js',
-    'php',
-    'py',
-    'scss',
+    'md',
+    'ts',
 ]
 
 try:
@@ -44,7 +50,7 @@ def update_presence():
     if get_extension() and get_extension() in has_thumbnail:
         activity['assets']['large_image'] = get_extension()
     else:
-        activity['assets']['large_image'] = 'unknown'
+        activity['assets']['large_image'] = 'none'
 
     try:
         rpc_obj.set_activity(activity)
