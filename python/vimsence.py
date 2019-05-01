@@ -55,7 +55,7 @@ def update_presence():
     """
     activity = base_activity
     activity['details'] = get_filename()
-    activity['assets']['large_text'] = 'Editing a {} file'.format(names[get_extension()])
+    activity['assets']['large_text'] = 'Editing a ' + names[get_extension()] + ' file.'
 
     if get_extension() and get_extension() in has_thumbnail:
         activity['assets']['large_image'] = get_extension()
