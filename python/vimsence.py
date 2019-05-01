@@ -19,26 +19,6 @@ base_activity = {
 
 client_id = '439476230543245312'
 
-names = {
-    'c': 'C',
-    'cr': 'Crystal',
-    'hs': 'Haskell',
-    'json': 'JSON',
-    'nim': 'Nim',
-    'rb': 'Ruby',
-    'cpp': 'C++',
-    'go': 'Go',
-    'js': 'JavaScript',
-    'md': 'Markdown',
-    'ts': 'TypeScript',
-    'py': 'Python',
-    'vim': 'Vim script',
-    'rs': 'Rust',
-    'css': 'CSS',
-    'html': 'HTML',
-    'vue': 'Vue.js'
-}
-
 has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'go', 'js', 'md', 'ts', 'py', 'vim', 'rs', 'css', 'html', 'vue'
 ]
@@ -55,7 +35,7 @@ def update_presence():
     """
     activity = base_activity
     activity['details'] = get_filename()
-    activity['assets']['large_text'] = 'Editing a ' + names[get_extension()] + ' file.'
+    activity['assets']['large_text'] = 'Editing a {} file.'.format(get_extension())
 
     if get_extension() and get_extension() in has_thumbnail:
         activity['assets']['large_image'] = get_extension()
