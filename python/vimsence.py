@@ -13,24 +13,34 @@ base_activity = {
             'small_text': 'Vim',
             'small_image': 'vim',
             'large_text': 'Vim',
-            'large_image': 'vim_logo'
+            'large_image': 'vim'
         }
     }
 
 client_id = '439476230543245312'
 
+names = {
+    'c': 'C',
+    'cr': 'Crystal',
+    'hs': 'Haskell',
+    'json': 'JSON',
+    'nim': 'Nim',
+    'rb': 'Ruby',
+    'cpp': 'C++',
+    'go': 'Go',
+    'js': 'JavaScript',
+    'md': 'Markdown',
+    'ts': 'TypeScript',
+    'py': 'Python',
+    'vim': 'Vim script',
+    'rs': 'Rust',
+    'css': 'CSS',
+    'html': 'HTML',
+    'vue': 'Vue.js'
+}
+
 has_thumbnail = [
-    'c',
-    'cr',
-    'hs',
-    'json',
-    'nim',
-    'rb',
-    'cpp',
-    'go',
-    'js',
-    'md',
-    'ts',
+    'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'go', 'js', 'md', 'ts', 'py', 'vim', 'rs', 'css', 'html', 'vue'
 ]
 
 try:
@@ -45,10 +55,12 @@ def update_presence():
     """
     activity = base_activity
     activity['details'] = get_filename()
-    activity['assets']['large_text'] = 'Editing a {} file'.format(get_extension().upper())
+    activity['assets']['large_text'] = 'Editing a {} file'.format(names[get_extension()])
 
     if get_extension() and get_extension() in has_thumbnail:
         activity['assets']['large_image'] = get_extension()
+    elif get_filename() == 'vimfiler:default':
+        activity['assets']['large_image'] = 'file-explorer'
     else:
         activity['assets']['large_image'] = 'none'
 
