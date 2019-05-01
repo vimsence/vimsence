@@ -35,14 +35,16 @@ def update_presence():
     """
     activity = base_activity
     activity['details'] = get_filename()
-    activity['assets']['large_text'] = 'Editing a {} file.'.format(get_extension())
 
     if get_extension() and get_extension() in has_thumbnail:
         activity['assets']['large_image'] = get_extension()
+        activity['assets']['large_text'] = 'Editing a {} file.'.format(get_extension())
     elif get_filename() == 'vimfiler:default':
         activity['assets']['large_image'] = 'file-explorer'
+        activity['assets']['large_text'] = 'In the file explorer.'.format(get_extension())
     else:
         activity['assets']['large_image'] = 'none'
+        activity['assets']['large_text'] = 'Nothing'.format(get_extension())
 
     try:
         rpc_obj.set_activity(activity)
