@@ -4,6 +4,12 @@ Discord rich presence for Vim
 
 More help about the plugin itself can be found [here](doc/vimsence.txt)
 
+Here are some screenshots of the app working: 
+
+![vimfiler](https://i.imgur.com/aL4g3nx.png)
+
+![editing markdown](https://i.imgur.com/nrhZj4O.png)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine.
@@ -42,7 +48,7 @@ git clone https://github.com/ananagame/vimsence.git
 ## Authors
 
 * **Anne Douwe Bouma** - *Initial work* - [anned20](https://github.com/anned20)
-* Hugo - Fork - [ananagame](https://github.com/ananagame)
+* **Hugo** - *Fork* - [ananagame](https://github.com/ananagame)
 
 See also the list of [contributors](https://github.com/ananagame/vimsence/contributors) who participated in this project.
 
