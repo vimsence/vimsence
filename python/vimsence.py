@@ -35,18 +35,30 @@ def update_presence():
     """
     activity = base_activity 
 
+    large_image = ""
+    large_text = ""
+    details = ""
+    state = ""
+
     if get_extension() and get_extension() in has_thumbnail:
-        activity['assets']['large_image'] = get_extension()
-        activity['assets']['large_text'] = 'Editing a {} file.'.format(get_extension())
-        activity['details'] = get_filename()
+        large_image = get_extension()
+        large_text = 'Editing a {} file.'.format(get_extension())
+        details = get_filename()
+        state = 'Workspace {}'.format(get_directory())
     elif get_filename() == 'vimfiler:default':
-        activity['assets']['large_image'] = 'file-explorer'
-        activity['assets']['large_text'] = 'In the file explorer.'.format(get_extension())
-        activity['details'] = 'In the file explorer'
+        large_image = 'file-explorer'
+        large_text = 'In the file explorer'
+        details = 'Searching for files'
+        state = 'Workspace: {}'.format(get_directory())
     else:
-        activity['assets']['large_image'] = 'none'
-        activity['assets']['large_text'] = 'Nothing'.format(get_extension())
-        activity['details'] = 'Nothing'
+        large_image = 'none'
+        large_text = 'Nothing'
+        details = 'Nothing'
+
+    activity['assets']['large_image'] = large_image
+    activity['assets']['large_text'] = large_text
+    activity['details'] = details
+    activity['state'] = state
 
     try:
         rpc_obj.set_activity(activity)
@@ -68,3 +80,9 @@ def get_extension():
     :returns: string
     """
     return vim.eval('expand("%:e")')
+
+def get_directory():
+    """Get current directory
+    :returns: string
+    """
+    return vim.eval('expand("%:p:h:t")')

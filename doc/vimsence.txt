@@ -46,7 +46,7 @@ VimSense is licensed under the MIT license.
 4. Bugs                                                         *VimSenceBugs*
 
 If you find a bug please post it on the issue tracker:
-http://github.com/anned20/vimsence/issues/
+http://github.com/ananagame/vimsence/issues/
 
 ==============================================================================
 5. Contributing                                         *VimSenceContributing*
@@ -54,7 +54,7 @@ http://github.com/anned20/vimsence/issues/
 Think you can make this plugin better? Awesome! Fork it on GitHub and send a
 pull request.
 
-GitHub: http://github.com/anned20/vimsence/
+GitHub: http://github.com/ananagame/vimsence/
 
 ==============================================================================
 6. Changelog                                               *VimsenceChangelog*
