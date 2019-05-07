@@ -12,8 +12,6 @@ base_activity = {
         'assets': {
             'small_text': 'Vim',
             'small_image': 'vim',
-            'large_text': 'Vim',
-            'large_image': 'vim'
         }
     }
 
@@ -42,9 +40,9 @@ def update_presence():
 
     if get_extension() and get_extension() in has_thumbnail:
         large_image = get_extension()
-        large_text = 'Editing a {} file.'.format(get_extension())
-        details = get_filename()
-        state = 'Workspace {}'.format(get_directory())
+        large_text = 'Editing a {} file'.format(get_extension())
+        details = 'Editing {}'.format(get_filename())
+        state = 'Workspace: {}'.format(get_directory())
     elif get_filename() == 'vimfiler:default':
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
