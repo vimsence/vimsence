@@ -41,10 +41,12 @@ class DiscordIpcClient(metaclass=ABCMeta):
 
     def __init__(self, client_id):
         self.client_id = client_id
-        self._connect()
-        self._do_handshake()
-        logger.info("connected via ID %s", client_id)
-
+        result = self._connect()
+        if not isinstance(result, Exception): 
+            self._do_handshake()
+            logger.info("connected via ID %s", client_id)
+        else:
+            logger.info("Failed to connect to Discord. Retry with <esc>:DiscordReconnect")
     @classmethod
     def for_platform(cls, client_id, platform=sys.platform):
         if platform == 'win32':
@@ -93,6 +95,22 @@ class DiscordIpcClient(metaclass=ABCMeta):
             self.send({}, op=OP_CLOSE)
         finally:
             self._close()
+
+    def reconnect(self):
+        try:
+            # Attempt to close the connection.
+            self.close()
+        except: 
+            # Ignore if it fails - the socket probably isn't initialized.
+            pass
+        try: 
+            self._connect()
+            self._do_handshake()
+            logger.info("Successfully connected to Discord.")
+        except Exception:
+            logger.error("Failed to connect. Is Discord running?")
+            pass
+        
 
     @abstractmethod
     def _close(self):
@@ -148,7 +166,7 @@ class WinDiscordIpcClient(DiscordIpcClient):
             try:
                 self._f = open(path, "w+b")
             except OSError as e:
-                logger.error("failed to open {!r}: {}".format(path, e))
+                pass
             else:
                 break
         else:
@@ -157,14 +175,16 @@ class WinDiscordIpcClient(DiscordIpcClient):
         self.path = path
 
     def _write(self, data: bytes):
-        self._f.write(data)
-        self._f.flush()
+        if hasattr(self, '_f'):
+            self._f.write(data)
+            self._f.flush()
 
     def _recv(self, size: int) -> bytes:
         return self._f.read(size)
 
     def _close(self):
-        self._f.close()
+        if hasattr(self, '_f'):
+            self._f.close()
 
 
 class UnixDiscordIpcClient(DiscordIpcClient):

@@ -2,6 +2,7 @@ import vim
 import rpc
 import time
 import logging
+import re
 
 start_time = int(time.time())
 base_activity = {
@@ -18,36 +19,55 @@ base_activity = {
 client_id = '439476230543245312'
 
 has_thumbnail = [
-    'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'go', 'js', 'md', 'ts', 'py', 'vim', 'rs', 'css', 'html', 'vue'
+    'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'hpp', 'go', 'js', 'md', 'ts', 'py',
+    'vim', 'rs', 'css', 'html', 'vue'
 ]
+
 
 try:
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
     rpc_obj.set_activity(base_activity)
 except Exception as e:
-    # Discord is not running
+    # Discord is not running.
+    # The session is initialized and can be re-used later.
     pass
+
 
 def update_presence():
     """Update presence in Discord
     """
-    activity = base_activity 
+    activity = base_activity
 
     large_image = ""
     large_text = ""
     details = ""
     state = ""
 
-    if get_extension() and get_extension() in has_thumbnail:
-        large_image = get_extension()
-        large_text = 'Editing a {} file'.format(get_extension())
-        details = 'Editing {}'.format(get_filename())
-        state = 'Workspace: {}'.format(get_directory())
-    elif get_filename() == 'vimfiler:default':
+    filename = get_filename()
+    directory = get_directory()
+    extension = get_extension()
+
+    if extension and extension in has_thumbnail:
+        if extension == "hpp":
+            large_image = "cpp"
+        else:
+            large_image = extension
+        large_text = 'Editing a {} file'.format(extension)
+        details = 'Editing {}'.format(filename)
+        state = 'Workspace: {}'.format(directory)
+    elif filename.startswith("."):
+        if filename in has_thumbnail:
+            large_image = filename
+        else:
+            large_image = "none"
+        large_text = 'Editing a {} file'.format(filename)
+        details = 'Editing {}'.format(filename)
+        state = 'Workspace: {}'.format(directory)
+    elif filename == 'vimfiler:default' or "NERD_tree_" in filename:
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
         details = 'Searching for files'
-        state = 'Workspace: {}'.format(get_directory())
+        state = 'Workspace: {}'.format(directory)
     else:
         large_image = 'none'
         large_text = 'Nothing'
@@ -66,6 +86,13 @@ def update_presence():
     except NameError as e:
         # Discord is not running
         pass
+    except OSError as e:
+        # IO-related issues (possibly disconnected)
+        pass
+
+def reconnect():
+    if rpc_obj.reconnect():
+        update_presence()
 
 def get_filename():
     """Get current filename that is being edited
@@ -83,4 +110,4 @@ def get_directory():
     """Get current directory
     :returns: string
     """
-    return vim.eval('getcwd()').split('(\/)|(\\)')[-1]
+    return re.split(r"[\\/]", vim.eval('getcwd()'))[-1]

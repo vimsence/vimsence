@@ -23,7 +23,12 @@ function! UpdatePresence()
     python3 vimsence.update_presence()
 endfunction
 
+function! DiscordReconnect()
+    python3 vimsence.reconnect()
+endfunction
+
 command! -nargs=0 UpdatePresence call UpdatePresence()
+command! -nargs=0 DiscordReconnect call DiscordReconnect()
 
 augroup DiscordPresence
     autocmd!

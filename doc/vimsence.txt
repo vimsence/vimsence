@@ -37,6 +37,13 @@ can use this: >
 This will force update the Discord presence with what you're currently
 editing.
 
+Manually reconnecting, either because Discord wasn't running or something
+else forced the connection to be closed, can be done with: >
+
+    :DiscordReconnect
+
+This will also attempt to close an existing session, if one exists.
+
 ==============================================================================
 3. License                                                   *VimSenceLicense*
 
