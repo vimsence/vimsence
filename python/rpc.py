@@ -94,6 +94,20 @@ class DiscordIpcClient(metaclass=ABCMeta):
         finally:
             self._close()
 
+    def reconnect(self):
+        try:
+            # Attempt to close the connection.
+            self.close()
+        except: 
+            # Ignore if it fails - the socket probably isn't initialized.
+            pass
+        try: 
+            self._connect()
+        except Exception:
+            logger.error("Failed to connect. Is Discord running?")
+            pass
+        
+
     @abstractmethod
     def _close(self):
         pass
@@ -148,7 +162,7 @@ class WinDiscordIpcClient(DiscordIpcClient):
             try:
                 self._f = open(path, "w+b")
             except OSError as e:
-                logger.error("failed to open {!r}: {}".format(path, e))
+                pass
             else:
                 break
         else:

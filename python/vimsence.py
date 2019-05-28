@@ -28,6 +28,9 @@ except Exception as e:
     # Discord is not running
     pass
 
+def reconnect():
+    rpc_obj.reconnect()
+
 def update_presence():
     """Update presence in Discord
     """
