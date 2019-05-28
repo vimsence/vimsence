@@ -174,7 +174,7 @@ class WinDiscordIpcClient(DiscordIpcClient):
         self.path = path
 
     def _write(self, data: bytes):
-        if self._f:
+        if hasattr(self, '_f'):
             self._f.write(data)
             self._f.flush()
 
@@ -182,7 +182,7 @@ class WinDiscordIpcClient(DiscordIpcClient):
         return self._f.read(size)
 
     def _close(self):
-        if self._f:
+        if hasattr(self, '_f'):
             self._f.close()
 
 
