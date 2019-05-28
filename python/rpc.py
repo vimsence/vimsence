@@ -106,6 +106,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
         try: 
             self._connect()
             self._do_handshake()
+            logger.info("Successfully connected to Discord.")
         except Exception:
             logger.error("Failed to connect. Is Discord running?")
             pass
