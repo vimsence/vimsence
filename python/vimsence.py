@@ -83,4 +83,4 @@ def get_directory():
     """Get current directory
     :returns: string
     """
-    return vim.eval('expand("%:p:h:t")')
+    return vim.eval('getcwd()').split('/')[-1]
