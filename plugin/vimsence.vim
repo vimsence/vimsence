@@ -28,6 +28,7 @@ function! DiscordReconnect()
 endfunction
 
 command! -nargs=0 UpdatePresence call UpdatePresence()
+command! -nargs=0 DiscordReconnect call DiscordReconnect()
 
 augroup DiscordPresence
     autocmd!
