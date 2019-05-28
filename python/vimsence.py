@@ -2,6 +2,7 @@ import vim
 import rpc
 import time
 import logging
+import re
 
 start_time = int(time.time())
 base_activity = {
@@ -62,7 +63,7 @@ def update_presence():
         large_text = 'Editing a {} file'.format(filename)
         details = 'Editing {}'.format(filename)
         state = 'Workspace: {}'.format(directory)
-    elif filename == 'vimfiler:default' or "NERD_tree_" in filename == 'NERD_tree_2':
+    elif filename == 'vimfiler:default' or "NERD_tree_" in filename:
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
         details = 'Searching for files'
@@ -109,4 +110,4 @@ def get_directory():
     """Get current directory
     :returns: string
     """
-    return vim.eval('getcwd()').split('(\/)|(\\)')[-1]
+    return re.split(r"[\\/]", vim.eval('getcwd()'))[-1]
