@@ -21,6 +21,7 @@ has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'go', 'js', 'md', 'ts', 'py', 'vim', 'rs', 'css', 'html', 'vue'
 ]
 
+
 try:
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
     rpc_obj.set_activity(base_activity)
@@ -29,6 +30,8 @@ except Exception as e:
     pass
 
 def reconnect():
+    if rpc_obj is None:
+        create();
     rpc_obj.reconnect()
 
 def update_presence():
@@ -68,6 +71,9 @@ def update_presence():
         pass
     except NameError as e:
         # Discord is not running
+        pass
+    except OSError as e:
+        # IO-related issues (possibly disconnected)
         pass
 
 def get_filename():

@@ -41,10 +41,12 @@ class DiscordIpcClient(metaclass=ABCMeta):
 
     def __init__(self, client_id):
         self.client_id = client_id
-        self._connect()
-        self._do_handshake()
-        logger.info("connected via ID %s", client_id)
-
+        result = self._connect()
+        if not isinstance(result, Exception): 
+            self._do_handshake()
+            logger.info("connected via ID %s", client_id)
+        else:
+            logger.info("Failed to connect to Discord. Retry with <esc>:DiscordReconnect")
     @classmethod
     def for_platform(cls, client_id, platform=sys.platform):
         if platform == 'win32':
@@ -103,6 +105,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
             pass
         try: 
             self._connect()
+            self._do_handshake()
         except Exception:
             logger.error("Failed to connect. Is Discord running?")
             pass
@@ -171,14 +174,16 @@ class WinDiscordIpcClient(DiscordIpcClient):
         self.path = path
 
     def _write(self, data: bytes):
-        self._f.write(data)
-        self._f.flush()
+        if self._f:
+            self._f.write(data)
+            self._f.flush()
 
     def _recv(self, size: int) -> bytes:
         return self._f.read(size)
 
     def _close(self):
-        self._f.close()
+        if self._f:
+            self._f.close()
 
 
 class UnixDiscordIpcClient(DiscordIpcClient):
