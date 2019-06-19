@@ -63,7 +63,7 @@ def update_presence():
         large_text = 'Editing a {} file'.format(filename)
         details = 'Editing {}'.format(filename)
         state = 'Workspace: {}'.format(directory)
-    elif filename == 'vimfiler:default' or "NERD_tree_" in filename:
+    elif filename == 'vimfiler:default' or "NERD_tree_" in filename or "NetrwTreeListing" in filename:
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
         details = 'Searching for files'
