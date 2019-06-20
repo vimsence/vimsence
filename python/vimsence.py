@@ -19,12 +19,13 @@ base_activity = {
 client_id = '439476230543245312'
 
 has_thumbnail = [
-    'c', 'cr', 'hs', 'json', 'nim', 'rb', 'cpp', 'go', 'js', 'markdown', 'ts', 'python',
-    'vim', 'rs', 'css', 'html', 'vue'
+    'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
+    'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue'
 ]
 # Remaps file types to specific icons.
 remap = { 
-    "python": "py", "markdown": "md"
+        "python": "py", "markdown": "md", "ruby": "rb", "rust": "rs", "typescript": "ts",
+        "javascript": "js"
 }
 
 file_explorers = [
@@ -51,10 +52,16 @@ def update_presence():
     global ignored_file_types
     global ignored_directories
     if (ignored_file_types == -1):
-        # Lazy init 
-        ignored_file_types = vim.eval("g:vimsence_ignored_file_types")
-        ignored_directories = vim.eval("g:vimsence_ignored_directories")
-    
+        # Lazy init
+        if (vim.eval("exists('{}')".format("g:vimsence_ignored_file_types")) == "1"):
+            ignored_file_types = vim.eval("g:vimsence_ignored_file_types")
+        else:
+            ignored_file_types = []
+        if (vim.eval("exists('{}')".format("g:vimsence_ignored_directories")) == "1"):
+            ignored_directories = vim.eval("g:vimsence_ignored_directories")
+        else:
+            ignored_directories = []
+
     activity = base_activity
 
     large_image = ""
@@ -64,24 +71,24 @@ def update_presence():
 
     filename = get_filename()
     directory = get_directory()
-    extension = get_extension()
+    filetype = get_filetype()
 
-    if (u.contains(ignored_file_types, extension) or u.contains(ignored_directories, directory)):
+    if (u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory)):
         # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
         # the folder or file. 
         rpc_obj.set_activity(base_activity)
         return
-    elif extension and extension in has_thumbnail:
+    elif filetype and filetype in has_thumbnail:
         # Check for files with thumbnail support
-        large_text = 'Editing a {} file'.format(extension)
-        if (extension in remap):
-            extension = remap[extension]
+        large_text = 'Editing a {} file'.format(filetype)
+        if (filetype in remap):
+            filetype = remap[filetype]
 
-        large_image = extension
+        large_image = filetype
 
         details = 'Editing {}'.format(filename)
         state = 'Workspace: {}'.format(directory)
-    elif extension in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
+    elif filetype in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
@@ -91,7 +98,8 @@ def update_presence():
         # if none of the other match, check if the buffer is writeable. If it is, 
         # assume it's a file and continue.
         large_image = 'none'
-        large_text = 'Editing a {} file'.format(extension)
+
+        large_text = 'Editing a {} file'.format(filetype if filetype else "Unknown" if not get_extension() else get_extension())
         details = 'Editing {}'.format(filename)
         state = 'Workspace: {}'.format(directory)
     else:
@@ -133,11 +141,20 @@ def get_filename():
     """
     return vim.eval('expand("%:t")')
 
-def get_extension():
-    """Get exension for file that is being edited
+def get_filetype():
+    """Get the filetype for file that is being edited
     :returns: string
     """
     return vim.eval('&filetype')
+def get_extension():
+    """Get the extension for the file that is being edited.
+    Currently serves as a fallback if the filetype is null, which can 
+    happen if the filetype is unrecognized and/or unsupported by 
+    Vim (this is usually only the case when there are no plugins
+    or anything else that adds a filetype to an unrecognized extension)
+    :returns: string
+    """
+    return vim.eval('expand("%:e")');
 
 def get_directory():
     """Get current directory

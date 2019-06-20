@@ -30,19 +30,31 @@ You just need to have this plugin installed and Discord running, the rest
 will work automatically.
 
 If you have to manually update your presence for some kind of reason, you
-can use this: >
-
+can use this:
+>
     :UpdatePresence
-
+<
 This will force update the Discord presence with what you're currently
 editing.
 
 Manually reconnecting, either because Discord wasn't running or something
-else forced the connection to be closed, can be done with: >
-
+else forced the connection to be closed, can be done with:
+>
     :DiscordReconnect
-
+<
 This will also attempt to close an existing session, if one exists.
+
+Additionally, both file types and directories can be ignored, which means
+they won't be displayed on Discord. Note that the file type variant uses
+file types, not file extensions. 
+The variable names used are:
+
+> 
+    g:vimsence_ignored_directories
+    g:vimsence_ignored_file_types 
+<
+
+These are expected to be arrays of strings. By default, these do not exclude any folders or file types.
 
 ==============================================================================
 3. License                                                   *VimSenceLicense*
