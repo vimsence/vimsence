@@ -20,7 +20,7 @@ client_id = '439476230543245312'
 
 has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
-    'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue'
+    'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'ikea'
 ]
 # Remaps file types to specific icons.
 remap = { 
