@@ -11,13 +11,18 @@ CONTENTS                                                   *Vimsence-contents*
 
     1. Introduction .................................. |VimSenceIntroduction|
     2. Usage ......................................... |VimSenceUsage|
+        Manually updating your presence .............. |DiscordUpdatePresence|
+        Reconnecting to Discord ...................... |DiscordReconnect|
+        Disconnecting from Discord ................... |DiscordDisconnect|
+        Ignoring file types or folders ............... |VimSenceIgnore|
+        Flatpak support (Linux) ...................... |VimSenceFlatpak|
     3. License ....................................... |VimSenceLisence|
     4. Bugs .......................................... |VimSenceBugs|
     5. Contributing .................................. |VimSenceContributing|
     6. Contributing .................................. |VimSenceChangelog|
 
 ==============================================================================
-1. Introduction                                          *VimSenceIntroduction*
+1. Introduction                                         *VimSenceIntroduction*
 
 VimSence updates the Discord "now playing" status with what you're currently
 editing in Vim. This way you can show all your friends how cool you are
@@ -29,32 +34,94 @@ programming in Vim.
 You just need to have this plugin installed and Discord running, the rest
 will work automatically.
 
-If you have to manually update your presence for some kind of reason, you
-can use this:
+There are still some commands, and some config options that can be set.
+
+------------------------------------------------------------------------------
+                                      *DiscordUpdatePresence* *UpdatePresence*
+Manually updating your presence ~
+
+If you have to manually update your presence, you can use this:
 >
-    :UpdatePresence
+    :DiscordUpdatePresence
 <
 This will force update the Discord presence with what you're currently
 editing.
 
-Manually reconnecting, either because Discord wasn't running or something
-else forced the connection to be closed, can be done with:
+------------------------------------------------------------------------------
+                                                            *DiscordReconnect*
+Reconnecting to Discord ~
+
+Manually reconnecting to Discord can be done with this command:
 >
     :DiscordReconnect
 <
-This will also attempt to close an existing session, if one exists.
+This will also attempt to close an existing session, if one exists. This also
+refreshes your presence. The purpose of this command is avoiding the need to
+reboot Vim because the Discord presence socket was disconnected, which can
+happen under various circumstances.
 
-Additionally, both file types and directories can be ignored, which means
-they won't be displayed on Discord. Note that the file type variant uses
-file types, not file extensions. 
-The variable names used are:
+------------------------------------------------------------------------------
+                                                           *DiscordDisconnect*
+Disconnecting from Discord ~
 
-> 
-    g:vimsence_ignored_directories
-    g:vimsence_ignored_file_types 
+It's also possible to manually disconnect, which effectively disables the
+plugin and prevents your status from showing up. This command can be used for
+that:
+>
+    :DiscordDisconnect
 <
 
-These are expected to be arrays of strings. By default, these do not exclude any folders or file types.
+------------------------------------------------------------------------------
+               *g:vimsence_ignored_directories* *g:vimsence_ignored_filetypes*
+                                                              *VimSenceIgnore*
+Ignoring directories or file types ~
+
+Both file types and directories can be ignored, which means they won't be
+displayed on Discord. Note that the file type variant uses file types, not
+file extensions. See `:echo &filetype` for the filetype of the current buffer.
+The variable names used are:
+>
+    g:vimsence_ignored_directories
+    g:vimsence_ignored_file_types
+<
+These are expected to be arrays of strings. By default, these do not exclude
+any folders or file types.
+
+------------------------------------------------------------------------------
+                                                  *g:vimsence_discord_flatpak*
+                                                             *VimSenceFlatpak*
+Support for Flatpak ~
+
+(Note: This only applies to Linux, and specifically distros Flatpak supports.
+ Having the option enabled on Linux without running the flatpak version will
+ cause the connection to fail)
+
+Flatpak support can be enabled with:
+>
+    let g:vimsence_discord_flatpak=1
+>
+Discord's Flatpak package exports its socket differently. Without
+`let g:vimsence_discord_flatpak=1`, vimsence will try to connect to the
+location the non-flatpak version exports its socket. This is typically
+`$XDG_RUNTIME_DIR`. The Flatpak version of Discord is forced to export the RPC
+socket under `$XDG_RUNTIME_DIR/app/com.discordapp.Discord/` because of how the
+sandboxing works. Unfortunately, this breaks vimsence, because the socket is
+set up in a different location than expected.
+
+A typical way to work around this is by symlinking the socket where it
+normally would be, but since the directory is deleted and regenerated on
+login/logout, it becomes inefficient.
+
+This is where `g:vimsence_discord_flatpak` comes in. With the option enabled,
+vimsence will connect to the socket by looking for the socket where the Flatpak
+version exports it. This is covered in slightly more detail on Discord's flatpak
+wiki:
+https://github.com/flathub/com.discordapp.Discord/wiki/Rich-Precense-(discord-rpc)
+
+The option also makes it possible to bypass symlinking entirely.
+
+TL;DR: `let g:vimsence_discord_flatpak=1` to fix issues with Flatpak and
+Discord's RPC socket
 
 ==============================================================================
 3. License                                                   *VimSenceLicense*
@@ -65,7 +132,7 @@ VimSense is licensed under the MIT license.
 4. Bugs                                                         *VimSenceBugs*
 
 If you find a bug please post it on the issue tracker:
-http://github.com/ananagame/vimsence/issues/
+https://github.com/hugolgst/vimsence/issues
 
 ==============================================================================
 5. Contributing                                         *VimSenceContributing*
@@ -73,10 +140,12 @@ http://github.com/ananagame/vimsence/issues/
 Think you can make this plugin better? Awesome! Fork it on GitHub and send a
 pull request.
 
-GitHub: http://github.com/ananagame/vimsence/
+GitHub: https://github.com/hugolgst/vimsence
 
 ==============================================================================
 6. Changelog                                               *VimsenceChangelog*
 
 v1.0.0
     * Initial stable release.
+
+vim:tw=78:ts=8:ft=help:norl:
