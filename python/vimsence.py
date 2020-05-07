@@ -23,7 +23,7 @@ has_thumbnail = [
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'ikea'
 ]
 # Remaps file types to specific icons.
-remap = { 
+remap = {
         "python": "py", "markdown": "md", "ruby": "rb", "rust": "rs", "typescript": "ts",
         "javascript": "js"
 }
@@ -49,6 +49,9 @@ except Exception as e:
 def update_presence():
     """Update presence in Discord
     """
+    if not rpc_obj.connected:
+        # If we're flagged as disconnected, skip all this processing and save some CPU cycles.
+        return;
     global ignored_file_types
     global ignored_directories
     if (ignored_file_types == -1):
@@ -75,7 +78,7 @@ def update_presence():
 
     if (u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory)):
         # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
-        # the folder or file. 
+        # the folder or file.
         rpc_obj.set_activity(base_activity)
         return
     elif filetype and filetype in has_thumbnail:
@@ -95,7 +98,7 @@ def update_presence():
         details = 'Searching for files'
         state = 'Workspace: {}'.format(directory)
     elif (is_writeable() and filename):
-        # if none of the other match, check if the buffer is writeable. If it is, 
+        # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
         large_image = 'none'
 
@@ -107,7 +110,7 @@ def update_presence():
         large_text = 'Nothing'
         details = 'Nothing'
 
-    # Update the activity 
+    # Update the activity
     activity['assets']['large_image'] = large_image
     activity['assets']['large_text'] = large_text
     activity['details'] = details
@@ -129,8 +132,14 @@ def reconnect():
     if rpc_obj.reconnect():
         update_presence()
 
+def disconnect():
+    try:
+        if rpc_obj.connected:
+            rpc_obj.close()
+    except:
+        pass
 def is_writeable():
-    """Returns whether the buffer is writeable or not 
+    """Returns whether the buffer is writeable or not
     :returns: string
     """
     return vim.eval('&modifiable')
@@ -148,8 +157,8 @@ def get_filetype():
     return vim.eval('&filetype')
 def get_extension():
     """Get the extension for the file that is being edited.
-    Currently serves as a fallback if the filetype is null, which can 
-    happen if the filetype is unrecognized and/or unsupported by 
+    Currently serves as a fallback if the filetype is null, which can
+    happen if the filetype is unrecognized and/or unsupported by
     Vim (this is usually only the case when there are no plugins
     or anything else that adds a filetype to an unrecognized extension)
     :returns: string

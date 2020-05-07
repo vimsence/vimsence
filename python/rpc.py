@@ -13,7 +13,7 @@ import socket
 import sys
 import struct
 import uuid
-
+import vim
 
 OP_HANDSHAKE = 0
 OP_FRAME = 1
@@ -22,7 +22,6 @@ OP_PING = 3
 OP_PONG = 4
 
 logger = logging.getLogger(__name__)
-
 
 class DiscordIpcError(Exception):
     pass
@@ -42,11 +41,14 @@ class DiscordIpcClient(metaclass=ABCMeta):
     def __init__(self, client_id):
         self.client_id = client_id
         result = self._connect()
-        if not isinstance(result, Exception): 
+        if not isinstance(result, Exception):
             self._do_handshake()
             logger.info("connected via ID %s", client_id)
+            self.connected = True;
         else:
             logger.info("Failed to connect to Discord. Retry with <esc>:DiscordReconnect")
+            self.connected = False;
+
     @classmethod
     def for_platform(cls, client_id, platform=sys.platform):
         if platform == 'win32':
@@ -95,22 +97,23 @@ class DiscordIpcClient(metaclass=ABCMeta):
             self.send({}, op=OP_CLOSE)
         finally:
             self._close()
+        self.connected = False
 
     def reconnect(self):
         try:
             # Attempt to close the connection.
             self.close()
-        except: 
+        except:
             # Ignore if it fails - the socket probably isn't initialized.
             pass
-        try: 
+        try:
             self._connect()
             self._do_handshake()
             logger.info("Successfully connected to Discord.")
+            self.connected = True
         except Exception:
             logger.error("Failed to connect. Is Discord running?")
-            pass
-        
+        return self.connected
 
     @abstractmethod
     def _close(self):
@@ -192,11 +195,18 @@ class UnixDiscordIpcClient(DiscordIpcClient):
     def _connect(self):
         self._sock = socket.socket(socket.AF_UNIX)
         pipe_pattern = self._get_pipe_pattern()
-
+        flatpak_support = vim.eval('g:vimsence_discord_flatpak')
+        position = ""
+        if flatpak_support == "1":
+            # if flatpak support is enabled, prefix the IPC socket name
+            # with app/com.discordapp.Discord/. This is to mitigate the non-standard
+            # location in a way that doesn't require symlinks right after boot
+            position = "app/com.discordapp.Discord/"
         for i in range(10):
-            path = pipe_pattern.format(i)
+            path = pipe_pattern.format(position, i)
+
             if not os.path.exists(path):
-                continue
+                continue;
             try:
                 self._sock.connect(path)
             except OSError as e:
@@ -215,7 +225,12 @@ class UnixDiscordIpcClient(DiscordIpcClient):
                 break
         else:
             dir_path = '/tmp'
-        return os.path.join(dir_path, 'discord-ipc-{}')
+        # The prefixed {} is to enable an easy fallback for odd positions within the directory.
+        # One notable example use for this is with the Flatpak version of Discord, which actually
+        # exposes $XDG_RUNTIME_DIR/app/com.discordapp.Discord/discord-ipc-<number>.
+        # This is a minor implementation detail that might support other sandboxes as well,
+        # but most importantly, avoids symlinks
+        return os.path.join(dir_path, '{}discord-ipc-{}')
 
     def _write(self, data: bytes):
         self._sock.sendall(data)

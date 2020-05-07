@@ -1,8 +1,17 @@
+DiscordDisconnect	vimsence.txt	/*DiscordDisconnect*
+DiscordReconnect	vimsence.txt	/*DiscordReconnect*
+DiscordUpdatePresence	vimsence.txt	/*DiscordUpdatePresence*
+UpdatePresence	vimsence.txt	/*UpdatePresence*
 VimSenceBugs	vimsence.txt	/*VimSenceBugs*
 VimSenceContributing	vimsence.txt	/*VimSenceContributing*
+VimSenceFlatpak	vimsence.txt	/*VimSenceFlatpak*
+VimSenceIgnore	vimsence.txt	/*VimSenceIgnore*
 VimSenceIntroduction	vimsence.txt	/*VimSenceIntroduction*
 VimSenceLicense	vimsence.txt	/*VimSenceLicense*
 VimSenceUsage	vimsence.txt	/*VimSenceUsage*
 Vimsence-contents	vimsence.txt	/*Vimsence-contents*
 VimsenceChangelog	vimsence.txt	/*VimsenceChangelog*
+g:vimsence_discord_flatpak	vimsence.txt	/*g:vimsence_discord_flatpak*
+g:vimsence_ignored_directories	vimsence.txt	/*g:vimsence_ignored_directories*
+g:vimsence_ignored_filetypes	vimsence.txt	/*g:vimsence_ignored_filetypes*
 vimsence.txt	vimsence.txt	/*vimsence.txt*
