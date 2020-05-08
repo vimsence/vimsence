@@ -26,16 +26,35 @@ sys.path.insert(0, python_root_dir)
 import vimsence
 EOF
 
-let s:vimsence_has_timers=has("timers")
+let s:vimsence_has_timers = has("timers")
+let s:timer = -1
 
 function! DiscordAsyncWrapper(callback)
     if s:vimsence_has_timers
-        call timer_start(100, a:callback)
+        if s:timer != -1
+            " Timer protection; this avoids issues when double events are
+            " dispatched.
+            " This exists purely to avoid issuing several timers as a result
+            " of the autocmd detecting file changes. (see the bottom
+            " of this script). Time timer is so low that it shouldn't
+            " interfere with several commands being dispatched at once.
+            let info = s:timer->timer_info()
+            if len(info) == 1 && info[0]["paused"] == 0
+                " The timer is running; skip.
+                return
+            endif
+        endif
+        " Start the timer to dispatch the event
+        let s:timer = timer_start(100, a:callback)
     else
+        " Fallback; no timer support, call the function directly.
         call a:callback(0)
     endif
 endfunction
 
+" Note on the next functions with a tid argument:
+" tid is short for timer id, and it's automatically
+" passed to timer callbacks.
 function! DiscordUpdatePresence(tid)
     python3 vimsence.update_presence()
 endfunction
