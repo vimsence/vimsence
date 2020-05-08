@@ -26,26 +26,36 @@ sys.path.insert(0, python_root_dir)
 import vimsence
 EOF
 
-function! DiscordUpdatePresence()
+let s:vimsence_has_timers=has("timers")
+
+function! DiscordAsyncWrapper(callback)
+    if s:vimsence_has_timers
+        call timer_start(100, a:callback)
+    else
+        call a:callback(0)
+    endif
+endfunction
+
+function! DiscordUpdatePresence(tid)
     python3 vimsence.update_presence()
 endfunction
 
-function! DiscordReconnect()
+function! DiscordReconnect(tid)
     python3 vimsence.reconnect()
 endfunction
 
-function! DiscordDisconnect()
+function! DiscordDisconnect(tid)
     python3 vimsence.disconnect()
 endfunction
 
 command! -nargs=0 UpdatePresence echo "This command has been deprecated. Use :DiscordUpdatePresence instead."
-command! -nargs=0 DiscordUpdatePresence call DiscordUpdatePresence()
-command! -nargs=0 DiscordReconnect call DiscordReconnect()
-command! -nargs=0 DiscordDisconnect call DiscordDisconnect()
+command! -nargs=0 DiscordUpdatePresence call DiscordAsyncWrapper(function('DiscordUpdatePresence'))
+command! -nargs=0 DiscordReconnect call DiscordAsyncWrapper(function('DiscordReconnect'))
+command! -nargs=0 DiscordDisconnect call DiscordAsyncWrapper(function('DiscordDisconnect'))
 
 augroup DiscordPresence
     autocmd!
-    autocmd BufNewFile,BufRead,BufEnter * :call DiscordUpdatePresence()
+    autocmd BufNewFile,BufRead,BufEnter * :call DiscordAsyncWrapper(function('DiscordUpdatePresence'))
 augroup END
 
 let g:vimsence_loaded = 1
