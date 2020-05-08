@@ -194,6 +194,7 @@ class UnixDiscordIpcClient(DiscordIpcClient):
 
     def _connect(self):
         self._sock = socket.socket(socket.AF_UNIX)
+        self._sock.settimeout(1)
         pipe_pattern = self._get_pipe_pattern()
         flatpak_support = vim.eval('g:vimsence_discord_flatpak')
         position = ""
