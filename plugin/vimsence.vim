@@ -57,14 +57,17 @@ endfunction
 " passed to timer callbacks.
 function! DiscordUpdatePresence(tid)
     python3 vimsence.update_presence()
+    let s:timer = -1
 endfunction
 
 function! DiscordReconnect(tid)
     python3 vimsence.reconnect()
+    let s:timer = -1
 endfunction
 
 function! DiscordDisconnect(tid)
     python3 vimsence.disconnect()
+    let s:timer = -1
 endfunction
 
 command! -nargs=0 UpdatePresence echo "This command has been deprecated. Use :DiscordUpdatePresence instead."
