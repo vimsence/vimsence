@@ -38,7 +38,7 @@ function! DiscordAsyncWrapper(callback)
             " of the autocmd detecting file changes. (see the bottom
             " of this script). Time timer is so low that it shouldn't
             " interfere with several commands being dispatched at once.
-            let info = s:timer->timer_info()
+            let info = timer_info(s:timer)
             if len(info) == 1 && info[0]["paused"] == 0
                 " The timer is running; skip.
                 return
