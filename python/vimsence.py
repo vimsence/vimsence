@@ -3,6 +3,10 @@ import rpc
 import time
 import re
 import utils as u
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 start_time = int(time.time())
 base_activity = {
@@ -31,6 +35,7 @@ remap = {
 file_explorers = [
     "nerdtree", "vimfiler", "netrw"
 ]
+
 # Fallbacks if, for some reason, the filetype isn't detected.
 file_explorer_names = [
     "vimfiler:default", "NERD_tree_", "NetrwTreeListing"
@@ -38,6 +43,8 @@ file_explorer_names = [
 
 ignored_file_types  = -1
 ignored_directories = -1
+# pre-initialization to deal with artifacts from slow initialization
+rpc_obj = None
 try:
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
     rpc_obj.set_activity(base_activity)
@@ -49,7 +56,7 @@ except Exception as e:
 def update_presence():
     """Update presence in Discord
     """
-    if not rpc_obj.connected:
+    if rpc_obj is None or not rpc_obj.connected:
         # If we're flagged as disconnected, skip all this processing and save some CPU cycles.
         return;
     global ignored_file_types
@@ -129,10 +136,16 @@ def update_presence():
         pass
 
 def reconnect():
+    if rpc_obj is None:
+        logger.error("The plugin hasn't connected yet")
+        return
     if rpc_obj.reconnect():
         update_presence()
 
 def disconnect():
+    if rpc_obj is None:
+        logger.error("The plugin hasn't connected yet")
+        return
     try:
         if rpc_obj.connected:
             rpc_obj.close()
