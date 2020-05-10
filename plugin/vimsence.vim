@@ -15,6 +15,11 @@ endif
 
 let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
+let s:vimsence_has_timers = has("timers")
+let s:timer = -1
+let s:vimsence_init=0
+
+" This loads the main dependencies and appends to the system path
 python3 << EOF
 import sys
 from os.path import normpath, join
@@ -22,12 +27,16 @@ import vim
 plugin_root_dir = vim.eval('s:plugin_root_dir')
 python_root_dir = normpath(join(plugin_root_dir, '..', 'python'))
 sys.path.insert(0, python_root_dir)
-
-import vimsence
 EOF
 
-let s:vimsence_has_timers = has("timers")
-let s:timer = -1
+" Async init of vimsence. Should prevent Vim from starting slowly
+function! s:InitializeDiscord()
+    if s:vimsence_init
+        return
+    endif
+    python3 import vimsence
+    let s:vimsence_init=1
+endfunction
 
 function! DiscordAsyncWrapper(callback)
     if s:vimsence_has_timers
@@ -56,16 +65,19 @@ endfunction
 " tid is short for timer id, and it's automatically
 " passed to timer callbacks.
 function! DiscordUpdatePresence(tid)
+    call s:InitializeDiscord()
     python3 vimsence.update_presence()
     let s:timer = -1
 endfunction
 
 function! DiscordReconnect(tid)
+    call s:InitializeDiscord()
     python3 vimsence.reconnect()
     let s:timer = -1
 endfunction
 
 function! DiscordDisconnect(tid)
+    call s:InitializeDiscord()
     python3 vimsence.disconnect()
     let s:timer = -1
 endfunction
@@ -74,6 +86,7 @@ command! -nargs=0 UpdatePresence echo "This command has been deprecated. Use :Di
 command! -nargs=0 DiscordUpdatePresence call DiscordAsyncWrapper(function('DiscordUpdatePresence'))
 command! -nargs=0 DiscordReconnect call DiscordAsyncWrapper(function('DiscordReconnect'))
 command! -nargs=0 DiscordDisconnect call DiscordAsyncWrapper(function('DiscordDisconnect'))
+
 
 augroup DiscordPresence
     autocmd!

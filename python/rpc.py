@@ -42,7 +42,13 @@ class DiscordIpcClient(metaclass=ABCMeta):
         self.client_id = client_id
         result = self._connect()
         if not isinstance(result, Exception):
-            self._do_handshake()
+            result = self._do_handshake()
+            if isinstance(result, socket.timeout):
+                logger.error("Note: the connection to discord timed out.")
+                return
+            elif isinstance(result, Exception):
+                logger.info("Failed to connect to Discord. Retry with <esc>:DiscordReconnect")
+                return
             logger.info("connected via ID %s", client_id)
             self.connected = True;
         else:
@@ -61,14 +67,17 @@ class DiscordIpcClient(metaclass=ABCMeta):
         pass
 
     def _do_handshake(self):
-        ret_op, ret_data = self.send_recv({'v': 1, 'client_id': self.client_id}, op=OP_HANDSHAKE)
-        # {'cmd': 'DISPATCH', 'data': {'v': 1, 'config': {...}}, 'evt': 'READY', 'nonce': None}
-        if ret_op == OP_FRAME and ret_data['cmd'] == 'DISPATCH' and ret_data['evt'] == 'READY':
-            return
-        else:
-            if ret_op == OP_CLOSE:
-                self.close()
-            raise RuntimeError(ret_data)
+        try:
+            ret_op, ret_data = self.send_recv({'v': 1, 'client_id': self.client_id}, op=OP_HANDSHAKE)
+            # {'cmd': 'DISPATCH', 'data': {'v': 1, 'config': {...}}, 'evt': 'READY', 'nonce': None}
+            if ret_op == OP_FRAME and ret_data['cmd'] == 'DISPATCH' and ret_data['evt'] == 'READY':
+                return
+            else:
+                if ret_op == OP_CLOSE:
+                    self.close()
+                return RuntimeError(ret_data)
+        except socket.timeout as e:
+            return e
 
     @abstractmethod
     def _write(self, date: bytes):
@@ -111,6 +120,8 @@ class DiscordIpcClient(metaclass=ABCMeta):
             self._do_handshake()
             logger.info("Successfully connected to Discord.")
             self.connected = True
+        except socket.timeout:
+            logger.error("Connection timed out")
         except Exception:
             logger.error("Failed to connect. Is Discord running?")
         return self.connected
@@ -194,7 +205,7 @@ class UnixDiscordIpcClient(DiscordIpcClient):
 
     def _connect(self):
         self._sock = socket.socket(socket.AF_UNIX)
-        self._sock.settimeout(1)
+        self._sock.settimeout(3)
         pipe_pattern = self._get_pipe_pattern()
         flatpak_support = vim.eval('g:vimsence_discord_flatpak')
         position = ""
@@ -211,6 +222,9 @@ class UnixDiscordIpcClient(DiscordIpcClient):
             try:
                 self._sock.connect(path)
             except OSError as e:
+                pass
+            except socket.timeout as e:
+                # Timed out; skip
                 pass
             else:
                 break
