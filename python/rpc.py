@@ -41,6 +41,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
     def __init__(self, client_id):
         self.client_id = client_id
         result = self._connect()
+        self.connected = False
         if not isinstance(result, Exception):
             result = self._do_handshake()
             if isinstance(result, socket.timeout):
@@ -53,7 +54,6 @@ class DiscordIpcClient(metaclass=ABCMeta):
             self.connected = True;
         else:
             logger.info("Failed to connect to Discord. Retry with <esc>:DiscordReconnect")
-            self.connected = False;
 
     @classmethod
     def for_platform(cls, client_id, platform=sys.platform):
