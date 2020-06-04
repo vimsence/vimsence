@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 class DiscordIpcError(Exception):
     pass
 
-
 class DiscordIpcClient(metaclass=ABCMeta):
 
     """Work with an open Discord instance via its JSON IPC for its rich presence API.

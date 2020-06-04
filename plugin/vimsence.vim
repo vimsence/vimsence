@@ -1,5 +1,6 @@
+" Closes if vim does not have python3
 if !has('python3')
-    echo 'vim has to be compiled with +python3 to run vimsence'
+    echo 'Vim has to be compiled with +python3.'
     finish
 endif
 
@@ -70,27 +71,30 @@ function! DiscordUpdatePresence(tid)
     let s:timer = -1
 endfunction
 
+" Reconnect the discord rich presence
 function! DiscordReconnect(tid)
     call s:InitializeDiscord()
     python3 vimsence.reconnect()
     let s:timer = -1
 endfunction
 
+" Disconnect the discord rich presence
 function! DiscordDisconnect(tid)
     call s:InitializeDiscord()
     python3 vimsence.disconnect()
     let s:timer = -1
 endfunction
 
+" Register the vim commands
 command! -nargs=0 UpdatePresence echo "This command has been deprecated. Use :DiscordUpdatePresence instead."
 command! -nargs=0 DiscordUpdatePresence call DiscordAsyncWrapper(function('DiscordUpdatePresence'))
 command! -nargs=0 DiscordReconnect call DiscordAsyncWrapper(function('DiscordReconnect'))
 command! -nargs=0 DiscordDisconnect call DiscordAsyncWrapper(function('DiscordDisconnect'))
-
 
 augroup DiscordPresence
     autocmd!
     autocmd BufNewFile,BufRead,BufEnter * :call DiscordAsyncWrapper(function('DiscordUpdatePresence'))
 augroup END
 
+" Set loaded to true
 let g:vimsence_loaded = 1

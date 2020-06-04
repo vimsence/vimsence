@@ -5,7 +5,6 @@ import re
 import utils as u
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 start_time = int(time.time())
@@ -135,6 +134,7 @@ def update_presence():
         # IO-related issues (possibly disconnected)
         pass
 
+# reconnects the presence
 def reconnect():
     if rpc_obj is None:
         logger.error("The plugin hasn't connected yet")
@@ -142,6 +142,7 @@ def reconnect():
     if rpc_obj.reconnect():
         update_presence()
 
+# disconnects the presence
 def disconnect():
     if rpc_obj is None:
         logger.error("The plugin hasn't connected yet")
@@ -151,24 +152,33 @@ def disconnect():
             rpc_obj.close()
     except:
         pass
+
 def is_writeable():
+
     """Returns whether the buffer is writeable or not
     :returns: string
     """
+
     return vim.eval('&modifiable')
 
 def get_filename():
+
     """Get current filename that is being edited
     :returns: string
     """
+
     return vim.eval('expand("%:t")')
 
 def get_filetype():
+
     """Get the filetype for file that is being edited
     :returns: string
     """
+
     return vim.eval('&filetype')
+
 def get_extension():
+
     """Get the extension for the file that is being edited.
     Currently serves as a fallback if the filetype is null, which can
     happen if the filetype is unrecognized and/or unsupported by
@@ -176,10 +186,13 @@ def get_extension():
     or anything else that adds a filetype to an unrecognized extension)
     :returns: string
     """
+
     return vim.eval('expand("%:e")');
 
 def get_directory():
+
     """Get current directory
     :returns: string
     """
+
     return re.split(r"[\\/]", vim.eval('getcwd()'))[-1]
