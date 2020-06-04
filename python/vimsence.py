@@ -107,15 +107,26 @@ def update_presence():
         rpc_obj.set_activity(base_activity)
         return
     elif filetype and filetype in has_thumbnail:
+        editing_text = 'Editing a {} file'
+        if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
+            editing_text = vim.eval("g:vimsence_editing_large_text")
+
         # Check for files with thumbnail support
-        large_text = 'Editing a {} file'.format(filetype)
+        large_text = editing_text.format(filetype)
         if (filetype in remap):
             filetype = remap[filetype]
 
         large_image = filetype
 
-        details = 'Editing {}'.format(filename)
-        state = 'Workspace: {}'.format(directory)
+        editing_details = 'Editing {}'
+        if (vim.eval("exists('{}')".format("g:vimsence_editing_details")) == "1"):
+            editing_details = vim.eval("g:vimsence_editing_details")
+        details = editing_details.format(filename)
+
+        editing_state = 'Workspace: {}'
+        if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
+            editing_state = vim.eval("g:vimsence_editing_state")
+        state = editing_state.format(directory)
     elif filetype in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
