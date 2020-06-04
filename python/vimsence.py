@@ -130,15 +130,14 @@ def update_presence():
     elif filetype in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
-        large_text = 'In the file explorer'
 
-        file_explorer_text = 'In the file explorer'
+        state = 'In the file explorer'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_text")) == "1"):
-            file_explorer_text = vim.eval("g:vimsence_file_explorer_text")
+            state = vim.eval("g:vimsence_file_explorer_text")
 
-        file_explorer_details = 'Searching for files'
+        details = 'Searching for files'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_details")) == "1"):
-            file_explorer_details = vim.eval("g:vimsence_file_explorer_details")
+            details = vim.eval("g:vimsence_file_explorer_details")
     elif (is_writeable() and filename):
         # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
