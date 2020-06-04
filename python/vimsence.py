@@ -131,7 +131,14 @@ def update_presence():
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
-        details = 'Searching for files'
+
+        file_explorer_text = 'In the file explorer'
+        if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_text")) == "1"):
+            file_explorer_text = vim.eval("g:vimsence_file_explorer_text")
+
+        file_explorer_details = 'Searching for files'
+        if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_details")) == "1"):
+            file_explorer_details = vim.eval("g:vimsence_file_explorer_details")
     elif (is_writeable() and filename):
         # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
