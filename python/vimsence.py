@@ -101,46 +101,43 @@ def update_presence():
     directory = get_directory()
     filetype = get_filetype()
 
+    editing_text = 'Editing a {} file'
+    if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
+        editing_text = vim.eval("g:vimsence_editing_large_text")
+ 
+    editing_state = 'Workspace: {}'
+    if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
+        editing_state = vim.eval("g:vimsence_editing_state")
+    state = editing_state.format(directory)
+
+    editing_details = 'Editing {}'
+    if (vim.eval("exists('{}')".format("g:vimsence_editing_details")) == "1"):
+        editing_details = vim.eval("g:vimsence_editing_details")
+    details = editing_details.format(filename)
+
     if (u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory)):
         # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
         # the folder or file.
         rpc_obj.set_activity(base_activity)
         return
     elif filetype and filetype in has_thumbnail:
-        editing_text = 'Editing a {} file'
-        if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
-            editing_text = vim.eval("g:vimsence_editing_large_text")
-
         # Check for files with thumbnail support
         large_text = editing_text.format(filetype)
         if (filetype in remap):
             filetype = remap[filetype]
 
         large_image = filetype
-
-        editing_details = 'Editing {}'
-        if (vim.eval("exists('{}')".format("g:vimsence_editing_details")) == "1"):
-            editing_details = vim.eval("g:vimsence_editing_details")
-        details = editing_details.format(filename)
-
-        editing_state = 'Workspace: {}'
-        if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
-            editing_state = vim.eval("g:vimsence_editing_state")
-        state = editing_state.format(directory)
     elif filetype in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
         large_text = 'In the file explorer'
         details = 'Searching for files'
-        state = 'Workspace: {}'.format(directory)
     elif (is_writeable() and filename):
         # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
         large_image = 'none'
 
-        large_text = 'Editing a {} file'.format(filetype if filetype else "Unknown" if not get_extension() else get_extension())
-        details = 'Editing {}'.format(filename)
-        state = 'Workspace: {}'.format(directory)
+        large_text = editing_text.format(filetype if filetype else "Unknown" if not get_extension() else get_extension())
     else:
         large_image = 'none'
         large_text = 'Nothing'
