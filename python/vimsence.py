@@ -131,9 +131,9 @@ def update_presence():
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
 
-        state = 'In the file explorer'
+        large_text = 'In the file explorer'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_text")) == "1"):
-            state = vim.eval("g:vimsence_file_explorer_text")
+            large_text = vim.eval("g:vimsence_file_explorer_text")
 
         details = 'Searching for files'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_details")) == "1"):
