@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 # Get small text and images from vim config
 small_text = 'Vim'
 small_image = 'vim'
-if (vim.eval("exists('{}')".format("g:vimsence_small_text") == "1"):
+if (vim.eval("exists('{}')".format("g:vimsence_small_text")) == "1"):
     small_text = vim.eval("g:vimsence_small_text")
-if (vim.eval("exists('{}')".format("g:vimsence_small_image") == "1"):
+if (vim.eval("exists('{}')".format("g:vimsence_small_image")) == "1"):
     small_text = vim.eval("g:vimsence_small_image")
 
 start_time = int(time.time())
