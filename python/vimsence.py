@@ -9,17 +9,20 @@ logger = logging.getLogger(__name__)
 
 start_time = int(time.time())
 base_activity = {
-        'details': 'Nothing',
-        'timestamps': {
-            'start': start_time
-        },
-        'assets': {
-            'small_text': 'Vim',
-            'small_image': 'vim',
-        }
+    'details': 'Nothing',
+    'timestamps': {
+        'start': start_time
+    },
+    'assets': {
+        'small_text': 'Vim',
+        'small_image': 'vim',
     }
+}
 
 client_id = '439476230543245312'
+# Get the application id from vim configuration if there is one
+if (vim.eval("exists('{}')".format("g:vimsence_app_id")) == "1"):
+    client_id = vim.eval("g:vimsence_app_id")
 
 has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
