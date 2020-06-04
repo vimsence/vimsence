@@ -7,6 +7,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Get small text and images from vim config
+small_text = 'Vim'
+small_image = 'vim'
+if (vim.eval("exists('{}')".format("g:vimsence_small_text") == "1"):
+    small_text = vim.eval("g:vimsence_small_text")
+if (vim.eval("exists('{}')".format("g:vimsence_small_image") == "1"):
+    small_text = vim.eval("g:vimsence_small_image")
+
 start_time = int(time.time())
 base_activity = {
     'details': 'Nothing',
@@ -14,8 +22,8 @@ base_activity = {
         'start': start_time
     },
     'assets': {
-        'small_text': 'Vim',
-        'small_image': 'vim',
+        'small_text': small_text,
+        'small_image': small_image,
     }
 }
 
@@ -28,9 +36,14 @@ has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh'
 ]
+
 # Remaps file types to specific icons.
 remap = {
-        "python": "py", "markdown": "md", "ruby": "rb", "rust": "rs", "typescript": "ts",
+        "python": "py", 
+        "markdown": "md", 
+        "ruby": "rb", 
+        "rust": "rs", 
+        "typescript": "ts",
         "javascript": "js"
 }
 
@@ -56,8 +69,11 @@ except Exception as e:
     pass
 
 def update_presence():
-    """Update presence in Discord
+
     """
+    Update presence in Discord
+    """
+
     if rpc_obj is None or not rpc_obj.connected:
         # If we're flagged as disconnected, skip all this processing and save some CPU cycles.
         return;
