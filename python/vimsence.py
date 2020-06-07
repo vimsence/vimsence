@@ -45,7 +45,8 @@ remap = {
         "ruby": "rb", 
         "rust": "rs", 
         "typescript": "ts",
-        "javascript": "js"
+        "javascript": "js",
+        "snippets": "vim"
 }
 
 file_explorers = [
