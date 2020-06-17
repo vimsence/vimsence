@@ -32,6 +32,7 @@ client_id = '439476230543245312'
 if (vim.eval("exists('{}')".format("g:vimsence_app_id")) == "1"):
     client_id = vim.eval("g:vimsence_app_id")
 
+# Contains which files has thumbnails.
 has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
@@ -39,14 +40,21 @@ has_thumbnail = [
 ]
 
 # Remaps file types to specific icons.
+# The key is the filetype, the value is the image name.
+# This is mainly used where the file type itself doesn't
+# match the name of the thumbnail.
+# Python files for an instance have the .py extension,
+# Vim says the `:echo &filetype` is python,
+# and the discord application uses the name "py"
+# to represent the thumbnail.
 remap = {
-        "python": "py", 
-        "markdown": "md", 
-        "ruby": "rb", 
-        "rust": "rs", 
+        "python": "py",
+        "markdown": "md",
+        "ruby": "rb",
+        "rust": "rs",
         "typescript": "ts",
         "javascript": "js",
-        "snippets": "vim"
+        "snippets": "vim",
 }
 
 file_explorers = [
@@ -122,7 +130,7 @@ def update_presence():
         # the folder or file.
         rpc_obj.set_activity(base_activity)
         return
-    elif filetype and filetype in has_thumbnail:
+    elif filetype and (filetype in has_thumbnail or filetype in remap):
         # Check for files with thumbnail support
         large_text = editing_text.format(filetype)
         if (filetype in remap):
