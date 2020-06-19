@@ -55,6 +55,8 @@ remap = {
         "typescript": "ts",
         "javascript": "js",
         "snippets": "vim",
+        "typescriptreact": "ts",
+        "javascriptreact": "js",
 }
 
 file_explorers = [
