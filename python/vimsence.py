@@ -29,8 +29,8 @@ base_activity = {
 
 client_id = '439476230543245312'
 # Get the application id from vim configuration if there is one
-if (vim.eval("exists('{}')".format("g:vimsence_app_id")) == "1"):
-    client_id = vim.eval("g:vimsence_app_id")
+if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
+    client_id = vim.eval("g:vimsence_client_id")
 
 # Contains which files has thumbnails.
 has_thumbnail = [
