@@ -36,7 +36,7 @@ if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
 has_thumbnail = [
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
-    'elixir', 'cs'
+    'elixir', 'cs', 'java', 'scala', 'kt'
 ]
 
 # Remaps file types to specific icons.
@@ -54,6 +54,7 @@ remap = {
         "rust": "rs",
         "typescript": "ts",
         "javascript": "js",
+        "elixir": "ex"
         "snippets": "vim",
         "typescriptreact": "ts",
         "javascriptreact": "js",
