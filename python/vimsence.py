@@ -39,9 +39,6 @@ has_thumbnail = {
     'elixir', 'cs'
 }
 
-if vim.eval("exists('g:vimsence_thumbnails')") == "1":
-    has_thumbnail.update(vim.eval("g:vimsence_thumbnails"))
-
 # Remaps file types to specific icons.
 # The key is the filetype, the value is the image name.
 # This is mainly used where the file type itself doesn't
@@ -62,8 +59,14 @@ remap = {
         "javascriptreact": "js",
 }
 
-if vim.eval("exists('g:vimsence_remapping')") == "1":
-    remap.update(vim.eval("g:vimsence_remapping"))
+# Support for custom clients with icons
+# vimsence_custom_icons is a mapping with the file types
+# as the keys and their remapping which is the actual
+# name of the thumbnail as the values.
+if vim.eval("exists('g:vimsence_custom_icons')") == "1":
+    thumbnails = vim.eval("g:vimsence_custom_icons")
+    has_thumbnail.update(thumbnails.values())
+    remap.update(thumbnails)
 
 file_explorers = [
     "nerdtree", "vimfiler", "netrw"
