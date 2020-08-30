@@ -39,6 +39,9 @@ has_thumbnail = [
     'elixir', 'cs'
 ]
 
+if vim.eval("exists('g:vimsence_thumbnails')") == "1":
+    has_thumbnail.extend(vim.eval("g:vimsence_thumbnails"))
+
 # Remaps file types to specific icons.
 # The key is the filetype, the value is the image name.
 # This is mainly used where the file type itself doesn't
@@ -58,6 +61,9 @@ remap = {
         "typescriptreact": "ts",
         "javascriptreact": "js",
 }
+
+if vim.eval("exists('g:vimsence_remapping')") == "1":
+    remap.update(vim.eval("g:vimsence_remapping"))
 
 file_explorers = [
     "nerdtree", "vimfiler", "netrw"
