@@ -33,14 +33,14 @@ if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
     client_id = vim.eval("g:vimsence_client_id")
 
 # Contains which files has thumbnails.
-has_thumbnail = [
+has_thumbnail = {
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
     'elixir', 'cs'
-]
+}
 
 if vim.eval("exists('g:vimsence_thumbnails')") == "1":
-    has_thumbnail.extend(vim.eval("g:vimsence_thumbnails"))
+    has_thumbnail.update(vim.eval("g:vimsence_thumbnails"))
 
 # Remaps file types to specific icons.
 # The key is the filetype, the value is the image name.
