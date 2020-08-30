@@ -41,7 +41,7 @@ git clone https://github.com/hugolgst/vimsence.git
 git submodule add https://github.com/hugolgst/vimsence.git vimsence
 ```
 
-## Configurate
+## Configuration
 You can configure the messages of VimSence in your `.vimrc` with these options:
 ```vim
 let g:vimsence_client_id = '439476230543245312'
@@ -51,6 +51,8 @@ let g:vimsence_editing_details = 'Editing: {}'
 let g:vimsence_editing_state = 'Working on: {}'
 let g:vimsence_file_explorer_text = 'In NERDTree'
 let g:vimsence_file_explorer_details = 'Looking for files'
+let g:vimsence_thumbnails = ['md']
+let g:vimence_remapping = {'markdown': 'md'}
 ```
 
 ## Authors
