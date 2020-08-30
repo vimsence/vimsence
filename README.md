@@ -51,8 +51,8 @@ let g:vimsence_editing_details = 'Editing: {}'
 let g:vimsence_editing_state = 'Working on: {}'
 let g:vimsence_file_explorer_text = 'In NERDTree'
 let g:vimsence_file_explorer_details = 'Looking for files'
-let g:vimsence_thumbnails = ['md']
-let g:vimence_remapping = {'markdown': 'md'}
+let g:vimsence_thumbnails = ['hs']
+let g:vimsence_remapping = {'haskell': 'hs'}
 ```
 
 ## Authors
