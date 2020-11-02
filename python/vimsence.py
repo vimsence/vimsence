@@ -33,11 +33,11 @@ if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
     client_id = vim.eval("g:vimsence_client_id")
 
 # Contains which files has thumbnails.
-has_thumbnail = [
+has_thumbnail = {
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
     'elixir', 'cs'
-]
+}
 
 # Remaps file types to specific icons.
 # The key is the filetype, the value is the image name.
@@ -58,6 +58,15 @@ remap = {
         "typescriptreact": "ts",
         "javascriptreact": "js",
 }
+
+# Support for custom clients with icons
+# vimsence_custom_icons is a mapping with the file types
+# as the keys and their remapping which is the actual
+# name of the thumbnail as the values.
+if vim.eval("exists('g:vimsence_custom_icons')") == "1":
+    thumbnails = vim.eval("g:vimsence_custom_icons")
+    has_thumbnail.update(thumbnails.values())
+    remap.update(thumbnails)
 
 file_explorers = [
     "nerdtree", "vimfiler", "netrw"
