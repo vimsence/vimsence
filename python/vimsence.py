@@ -36,7 +36,7 @@ if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
 has_thumbnail = {
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
-    'elixir', 'cs'
+    'elixir', 'cs', 'ocaml
 }
 
 # Remaps file types to specific icons.
@@ -57,6 +57,7 @@ remap = {
         "snippets": "vim",
         "typescriptreact": "ts",
         "javascriptreact": "js",
+        "ocaml": "ml",
 }
 
 # Support for custom clients with icons
