@@ -36,7 +36,7 @@ if (vim.eval("exists('{}')".format("g:vimsence_client_id")) == "1"):
 has_thumbnail = {
     'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
     'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
-    'elixir', 'cs', 'ocaml'
+    'elixir', 'cs', 'f', 'jsx', 'tsx', 'sql', 'plsql', 'ocaml'
 }
 
 # Remaps file types to specific icons.
@@ -58,6 +58,7 @@ remap = {
         "typescriptreact": "ts",
         "javascriptreact": "js",
         "ocaml": "ml",
+        "fortran": "f",
 }
 
 # Support for custom clients with icons
@@ -98,7 +99,7 @@ def update_presence():
 
     if rpc_obj is None or not rpc_obj.connected:
         # If we're flagged as disconnected, skip all this processing and save some CPU cycles.
-        return;
+        return
     global ignored_file_types
     global ignored_directories
     if (ignored_file_types == -1):
@@ -126,7 +127,7 @@ def update_presence():
     editing_text = 'Editing a {} file'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
         editing_text = vim.eval("g:vimsence_editing_large_text")
- 
+
     editing_state = 'Workspace: {}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
         editing_state = vim.eval("g:vimsence_editing_state")
@@ -179,13 +180,13 @@ def update_presence():
 
     try:
         rpc_obj.set_activity(activity)
-    except BrokenPipeError as e:
+    except BrokenPipeError:
         # Connection to Discord is lost
         pass
-    except NameError as e:
+    except NameError:
         # Discord is not running
         pass
-    except OSError as e:
+    except OSError:
         # IO-related issues (possibly disconnected)
         pass
 
@@ -242,7 +243,7 @@ def get_extension():
     :returns: string
     """
 
-    return vim.eval('expand("%:e")');
+    return vim.eval('expand("%:e")')
 
 def get_directory():
 
