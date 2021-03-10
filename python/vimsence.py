@@ -123,6 +123,8 @@ def update_presence():
     filename = get_filename()
     directory = get_directory()
     filetype = get_filetype()
+    filesize = get_filesize()
+    fileline = get_fileline()
 
     editing_text = 'Editing a {} file'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
@@ -252,3 +254,27 @@ def get_directory():
     """
 
     return re.split(r"[\\/]", vim.eval('getcwd()'))[-1]
+
+def get_filesize():
+
+    """Get current file size.
+    :returns: string
+    """
+
+    size = float(vim.eval('getfsize(expand(@%))'))
+    if size <= 0:
+        return "0B"
+    names = ("B", "KB", "MB", "GB")
+    i = 0
+    while size > 1024.0:
+        size = size / 1024.0
+        i += 1
+    return "%.1f%s" % (size, names[i])
+
+def get_fileline():
+
+    """Get current file lines
+    :returns: string
+    """
+    
+    return vim.eval('line("$")')
