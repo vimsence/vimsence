@@ -18,6 +18,7 @@ if (vim.eval("exists('{}')".format("g:vimsence_small_image")) == "1"):
 start_time = int(time.time())
 base_activity = {
     'details': 'Nothing',
+    'state': '',
     'timestamps': {
         'start': start_time
     },
@@ -122,21 +123,38 @@ def update_presence():
 
     filename = get_filename()
     directory = get_directory()
+    filedir = get_filedir()
     filetype = get_filetype()
+    filesize = get_filesize()
+    filesizeb = get_filesizeb()
+    fileline = get_fileline()
 
-    editing_text = 'Editing a {} file'
-    if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
-        editing_text = vim.eval("g:vimsence_editing_large_text")
+    # Replace function for customization by user,
+    # not a good code but it's fast and does the job
+    def replace_text(string):
+        string = string.replace("{filename}", filename)
+        string = string.replace("{directory}", directory)
+        string = string.replace("{filedir}", filedir)
+        string = string.replace("{filetype}", filetype)
+        string = string.replace("{filesize}", filesize)
+        string = string.replace("{filesizeb}", filesizeb)
+        string = string.replace("{fileline}", fileline)
+        return string
 
-    editing_state = 'Workspace: {}'
+    editing_text = 'Editing a {filetype} file'
+    if (vim.eval("exists('{}')".format("g:vimsence_editing_text")) == "1"):
+        editing_text = vim.eval("g:vimsence_editing_text")
+    large_text = replace_text(editing_text)
+
+    editing_state = 'Workspace: {directory}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
         editing_state = vim.eval("g:vimsence_editing_state")
-    state = editing_state.format(directory)
+    state = replace_text(editing_state)
 
-    editing_details = 'Editing {}'
+    editing_details = 'Editing {filename}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_details")) == "1"):
         editing_details = vim.eval("g:vimsence_editing_details")
-    details = editing_details.format(filename)
+    details = replace_text(editing_details)
 
     if (u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory)):
         # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
@@ -145,7 +163,7 @@ def update_presence():
         return
     elif filetype and (filetype in has_thumbnail or filetype in remap):
         # Check for files with thumbnail support
-        large_text = editing_text.format(filetype)
+        large_text = replace_text(editing_text)
         if (filetype in remap):
             filetype = remap[filetype]
 
@@ -153,6 +171,8 @@ def update_presence():
     elif filetype in file_explorers or u.contains_fuzzy(file_explorer_names, filename):
         # Special case: file explorers. These have a separate icon and description.
         large_image = 'file-explorer'
+        if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_image")) == "1"):
+            large_text = vim.eval("g:vimsence_file_explorer_image")
 
         large_text = 'In the file explorer'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_text")) == "1"):
@@ -161,16 +181,30 @@ def update_presence():
         details = 'Searching for files'
         if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_details")) == "1"):
             details = vim.eval("g:vimsence_file_explorer_details")
+
+        if (vim.eval("exists('{}')".format("g:vimsence_file_explorer_state")) == "1"):
+            state = vim.eval("g:vimsence_file_explorer_state")
     elif (is_writeable() and filename):
         # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
         large_image = 'none'
+        if (vim.eval("exists('{}')".format("g:vimsence_unknown_image")) == "1"):
+            large_image = vim.eval("g:vimsence_unknown_image")
 
-        large_text = editing_text.format(filetype if filetype else "Unknown" if not get_extension() else get_extension())
+        large_text = replace_text(editing_text) if filetype else "Unknown" if not get_extension() else get_extension()
     else:
         large_image = 'none'
+        if (vim.eval("exists('{}')".format("g:vimsence_idle_image")) == "1"):
+            large_image = vim.eval("g:vimsence_idle_image")
+
         large_text = 'Nothing'
         details = 'Nothing'
+        if (vim.eval("exists('{}')".format("g:vimsence_idle_text")) == "1"):
+            large_text = vim.eval("g:vimsence_idle_text")
+            details = vim.eval("g:vimsence_idle_text")
+
+        if (vim.eval("exists('{}')".format("g:vimsence_idle_state")) == "1"):
+            state = vim.eval("g:vimsence_idle_state")
 
     # Update the activity
     activity['assets']['large_image'] = large_image
@@ -252,3 +286,48 @@ def get_directory():
     """
 
     return re.split(r"[\\/]", vim.eval('getcwd()'))[-1]
+
+def get_filedir():
+
+    """Get current file directory, fallback to get_directory() if errors
+    :returns: string
+    """
+
+    try:
+        dir = re.split(r"[\\/]", vim.eval('expand("%:p")'))[-2]
+    except:
+        dir = get_directory()
+
+    return dir
+
+def get_filesize():
+
+    """Get current file human-readable size
+    :returns: string
+    """
+
+    size = float(vim.eval('getfsize(expand(@%))'))
+    if size <= 0:
+        return "0B"
+    names = ("B", "KB", "MB", "GB")
+    i = 0
+    while size > 1024.0:
+        size = size / 1024.0
+        i += 1
+    return "%.1f%s" % (size, names[i])
+
+def get_filesizeb():
+
+    """Get current file size in bytes
+    :returns: string
+    """
+
+    return vim.eval('getfsize(expand(@%))')
+
+def get_fileline():
+
+    """Get current file lines
+    :returns: string
+    """
+    
+    return vim.eval('line("$")')
