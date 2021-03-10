@@ -146,10 +146,6 @@ def update_presence():
         editing_text = vim.eval("g:vimsence_editing_text")
     large_text = replace_text(editing_text)
 
-    editing_text = 'Editing a {} file'
-    if (vim.eval("exists('{}')".format("g:vimsence_editing_large_text")) == "1"):
-        editing_text = vim.eval("g:vimsence_editing_large_text")
-
     editing_state = 'Workspace: {}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
         editing_state = vim.eval("g:vimsence_editing_state")

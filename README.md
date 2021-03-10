@@ -14,29 +14,6 @@ More help about the plugin itself can be found [here](doc/vimsence.txt).
 ### Prerequisites
 You need to have Vim/NeoVim with Python3 support
 
-### Added Features
-#### Tags
-Currently working in `editing_large_text`, `editing_state` and `editing_details`
-- `{filename}` current file name with extension
-- `{filetype}` current file extension
-- `{filesize}` current file human-readable size (KB, MB, ..)
-- `{filesizeb}` current file size in bytes
-- `{fileline}` current file lines
-- `{filedir}` current file folder
-
-#### New Configurations
-Tip: Hide `state` or `details` with double spaces '  '
-- `g:vimsence_file_explorer_image` image for file explorer
-- `g:vimsence_file_epxlorer_state` file explorer bottom text
-- `g:vimsence_unknown_image` image if filetype doesn't have an icon
-- `g:vimsence_idle_image` image if no file is open (idling?)
-- `g:vimsence_idle_text` idle text applies to large_text and details
-- `g:vimsence_idle_state` idle bottom text
-
-#### Details
-- Added `get_filedir()`, `get_filesize()`, `get_filesizeb()` and `get_fileline()`
-- Changed `g:vimsence_editing_large_text` to `g:vimsence_editing_text`
-
 ### Installing
 #### [Vim-Plug](https://github.com/junegunn/vim-plug)
 1. Add `Plug 'hugolgst/vimsence'` to your vimrc file.
@@ -75,8 +52,19 @@ let g:vimsence_editing_details = 'Editing {filename}'
 let g:vimsence_editing_state = 'Working on {directory}'
 let g:vimsence_file_explorer_text = 'In NERDTree'
 let g:vimsence_file_explorer_details = 'Looking for files'
+let g:vimsence_idle_text = 'Idling'
+let g:vimsence_idle_state = '  '
 let g:vimsence_custom_icons = {'filetype': 'iconname'}
 ```
+### Tags
+You can put this inside `editing_large_text`, `editing_state` and `editing_details`
+- `{filename}` current file name with extension
+- `{filetype}` current file extension
+- `{filesize}` current file human-readable size (KB, MB, ..)
+- `{filesizeb}` current file size in bytes
+- `{fileline}` current file lines
+- `{filedir}` current file directory
+- `{directory}` workspace directory
 
 ## Authors
 | Contributor                                                                                                                         | What has been done    |
