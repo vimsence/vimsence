@@ -54,6 +54,26 @@ let g:vimsence_file_explorer_details = 'Looking for files'
 let g:vimsence_custom_icons = {'filetype': 'iconname'}
 ```
 
+## Development
+First create a virtual environment.
+If you don’t already have a preferred way to do this,
+take some time to look at tools like pew, virtualfish, and virtualenvwrapper.
+
+Install the development dependencies:
+```sh
+pip install -r requirements-dev.txt
+```
+
+To avoid committing code that violates our style guide, we strongly advise you to install [pre-commit](https://pre-commit.com/) hooks:
+```sh
+pre-commit install
+```
+
+You can also run them anytime using:
+```sh
+pre-commit run --all-files
+```
+
 ## Authors
 | Contributor                                                                                                                         | What has been done    |
 |-------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
