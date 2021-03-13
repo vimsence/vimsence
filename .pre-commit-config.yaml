@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: double-quote-string-fixer
+      - id: requirements-txt-fixer
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.2.1
+    hooks:
+      - id: python-safety-dependencies-check
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+      - id: flake8
