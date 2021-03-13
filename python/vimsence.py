@@ -131,7 +131,7 @@ def update_presence():
 
     # Replace function for customization by user,
     # not a good code but it's fast and does the job
-    def replace_text(string):
+    def parse_tags(string):
         string = string.replace("{filename}", filename)
         string = string.replace("{directory}", directory)
         string = string.replace("{filedir}", filedir)
@@ -144,17 +144,17 @@ def update_presence():
     editing_text = 'Editing a {filetype} file'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_text")) == "1"):
         editing_text = vim.eval("g:vimsence_editing_text")
-    large_text = replace_text(editing_text)
+    large_text = parse_tags(editing_text)
 
     editing_state = 'Workspace: {}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_state")) == "1"):
         editing_state = vim.eval("g:vimsence_editing_state")
-    state = replace_text(editing_state)
+    state = parse_tags(editing_state)
 
     editing_details = 'Editing {filename}'
     if (vim.eval("exists('{}')".format("g:vimsence_editing_details")) == "1"):
         editing_details = vim.eval("g:vimsence_editing_details")
-    details = replace_text(editing_details)
+    details = parse_tags(editing_details)
 
     if (u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory)):
         # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
@@ -163,7 +163,7 @@ def update_presence():
         return
     elif filetype and (filetype in has_thumbnail or filetype in remap):
         # Check for files with thumbnail support
-        large_text = replace_text(editing_text)
+        large_text = parse_tags(editing_text)
         if (filetype in remap):
             filetype = remap[filetype]
 
@@ -191,7 +191,7 @@ def update_presence():
         if (vim.eval("exists('{}')".format("g:vimsence_unknown_image")) == "1"):
             large_image = vim.eval("g:vimsence_unknown_image")
 
-        large_text = replace_text(editing_text) if filetype else "Unknown" if not get_extension() else get_extension()
+        large_text = parse_tags(editing_text) if filetype else "Unknown" if not get_extension() else get_extension()
     else:
         large_image = 'none'
         if (vim.eval("exists('{}')".format("g:vimsence_idle_image")) == "1"):
