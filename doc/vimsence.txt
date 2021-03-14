@@ -19,7 +19,6 @@ CONTENTS                                                   *Vimsence-contents*
     3. License ....................................... |VimSenceLisence|
     4. Bugs .......................................... |VimSenceBugs|
     5. Contributing .................................. |VimSenceContributing|
-    6. Contributing .................................. |VimSenceChangelog|
 
 ==============================================================================
 1. Introduction                                         *VimSenceIntroduction*
@@ -140,12 +139,6 @@ https://github.com/hugolgst/vimsence/issues
 Think you can make this plugin better? Awesome! Fork it on GitHub and send a
 pull request.
 
-GitHub: https://github.com/hugolgst/vimsence
-
-==============================================================================
-6. Changelog                                               *VimsenceChangelog*
-
-v1.0.0
-    * Initial stable release.
+GitHub: https://github.com/vimsence/vimsence
 
 vim:tw=78:ts=8:ft=help:norl:
