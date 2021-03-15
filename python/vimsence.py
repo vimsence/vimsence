@@ -1,9 +1,10 @@
-import vim
-import rpc
-import time
-import re
-import utils as u
 import logging
+import re
+import time
+
+import rpc
+import utils as u
+import vim
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +109,7 @@ def update_presence():
     global ignored_file_types
     global ignored_directories
 
-    if (ignored_file_types == -1):
+    if ignored_file_types == -1:
         # Lazy init
         if vim.eval('exists("g:vimsence_ignored_file_types")') == '1':
             ignored_file_types = vim.eval('g:vimsence_ignored_file_types')
@@ -157,7 +158,8 @@ def update_presence():
     if filetype and (filetype in has_thumbnail or filetype in remap):
         # Check for files with thumbnail support
         large_text = editing_text.format(filetype)
-        if (filetype in remap):
+
+        if filetype in remap:
             filetype = remap[filetype]
 
         large_image = filetype
@@ -172,7 +174,7 @@ def update_presence():
         details = 'Searching for files'
         if vim.eval('exists("g:vimsence_file_explorer_details")') == '1':
             details = vim.eval('g:vimsence_file_explorer_details')
-    elif (is_writeable() and filename):
+    elif is_writable() and filename:
         # if none of the other match, check if the buffer is writeable. If it is,
         # assume it's a file and continue.
         large_image = 'none'
@@ -227,7 +229,7 @@ def disconnect():
         pass
 
 
-def is_writeable():
+def is_writable():
     '''Returns whether the buffer is writeable or not
     :returns: string
     '''
