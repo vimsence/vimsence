@@ -1,4 +1,6 @@
+import json
 import logging
+import os
 import re
 import time
 
@@ -34,12 +36,12 @@ client_id = '439476230543245312'
 if vim.eval('exists("g:vimsence_client_id")') == '1':
     client_id = vim.eval('g:vimsence_client_id')
 
+# Load filetype and remap configuration from the configuration file
+with open(os.path.join(vim.eval('s:plugin_root_dir'), '..', 'vimsence.json'), 'r') as config_file:
+    config = json.load(config_file)
+
 # Contains which files has thumbnails.
-has_thumbnail = {
-    'c', 'cr', 'hs', 'json', 'nim', 'ruby', 'cpp', 'go', 'javascript', 'markdown',
-    'typescript', 'python', 'vim', 'rust', 'css', 'html', 'vue', 'paco', 'tex', 'sh',
-    'elixir', 'cs', 'f', 'jsx', 'tsx', 'sql', 'plsql', 'ocaml',
-}
+has_thumbnail = [item['name'] for item in config['filetypes']]
 
 # Remaps file types to specific icons.
 # The key is the filetype, the value is the image name.
@@ -49,19 +51,7 @@ has_thumbnail = {
 # Vim says the `:echo &filetype` is python,
 # and the discord application uses the name "py"
 # to represent the thumbnail.
-remap = {
-    'python': 'py',
-    'markdown': 'md',
-    'ruby': 'rb',
-    'rust': 'rs',
-    'typescript': 'ts',
-    'javascript': 'js',
-    'snippets': 'vim',
-    'typescriptreact': 'ts',
-    'javascriptreact': 'js',
-    'ocaml': 'ml',
-    'fortran': 'f',
-}
+remap = {item['name']: item['icon'] for item in config['filetypes'] if 'icon' in item}
 
 # Support for custom clients with icons
 # vimsence_custom_icons is a mapping with the file types
@@ -155,7 +145,7 @@ def update_presence():
 
         return
 
-    if filetype and (filetype in has_thumbnail or filetype in remap):
+    if filetype and filetype in has_thumbnail:
         # Check for files with thumbnail support
         large_text = editing_text.format(filetype)
 
