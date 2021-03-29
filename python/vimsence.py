@@ -260,4 +260,4 @@ def get_directory():
     :returns: string
     '''
 
-    return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
+    return re.split(r'[\\/]', vim.eval("system('git rev-parse --show-toplevel || pwd')"))[-1]
