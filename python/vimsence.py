@@ -2,9 +2,9 @@ import json
 import logging
 import os
 import re
+import subprocess
 import time
 
-import git
 import rpc
 import utils as u
 import vim
@@ -261,9 +261,8 @@ def get_directory():
     :returns: string
     '''
 
-    try:
-        path = git.Repo('.', search_parent_directories=True).git.rev_parse('--show-toplevel')
-    except git.exc.InvalidGitRepositoryError:
-        path = vim.eval('getcwd()')
+    git_root = str(subprocess.Popen(['git', 'rev-parse', '--show-toplevel'],
+                   stdout=subprocess.PIPE).communicate()[0].rstrip(),
+                   encoding='utf-8')
 
-    return re.split(r'[\\/]', path)[-1]
+    return re.split(r'[\\/]', git_root if git_root != '' else vim.eval('getcwd()'))[-1]
