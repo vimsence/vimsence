@@ -4,6 +4,7 @@ import os
 import re
 import time
 
+import git
 import rpc
 import utils as u
 import vim
@@ -260,4 +261,9 @@ def get_directory():
     :returns: string
     '''
 
-    return re.split(r'[\\/]', vim.eval("system('git rev-parse --show-toplevel || pwd')"))[-1]
+    try:
+        path = git.Repo('.', search_parent_directories=True).git.rev_parse('--show-toplevel')
+    except git.exc.InvalidGitRepositoryError:
+        path = vim.eval('getcwd()')
+
+    return re.split(r'[\\/]', path)[-1]
