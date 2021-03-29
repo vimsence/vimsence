@@ -257,8 +257,8 @@ def get_extension():
 
 
 def get_directory():
-    '''Get current workspace directory, which is the git root when available
-    or just the current directory otherwise.
+    '''Get the current workspace directory, which is the git root when
+    available or just the current directory otherwise.
     :returns: string
     '''
 
