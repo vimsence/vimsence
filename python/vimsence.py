@@ -58,9 +58,9 @@ remap = {item['name']: item['icon'] for item in config['filetypes'] if 'icon' in
 # as the keys and their remapping which is the actual
 # name of the thumbnail as the values.
 if vim.eval('exists("g:vimsence_custom_icons")') == '1':
-    thumbnails = vim.eval('g:vimsence_custom_icons')
-    has_thumbnail.update(thumbnails.values())
-    remap.update(thumbnails)
+    custom_icons = vim.eval('g:vimsence_custom_icons')
+    has_thumbnail = list(set(has_thumbnail + custom_icons.values()))
+    remap.update(custom_icons)
 
 file_explorers = [
     'nerdtree',
