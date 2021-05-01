@@ -72,19 +72,21 @@ that:
 
 ------------------------------------------------------------------------------
                *g:vimsence_ignored_directories* *g:vimsence_ignored_filetypes*
+               *g:vimsence_ignored_files*
                                                               *VimSenceIgnore*
-Ignoring directories or file types ~
+Ignoring directories or files file types ~
 
-Both file types and directories can be ignored, which means they won't be
+File types, files and directories can be ignored, which means they won't be
 displayed on Discord. Note that the file type variant uses file types, not
 file extensions. See `:echo &filetype` for the filetype of the current buffer.
 The variable names used are:
 >
-    g:vimsence_ignored_directories
     g:vimsence_ignored_file_types
+    g:vimsence_ignored_files
+    g:vimsence_ignored_directories
 <
 These are expected to be arrays of strings. By default, these do not exclude
-any folders or file types.
+any folders, files or file types.
 
 ------------------------------------------------------------------------------
                                                   *g:vimsence_discord_flatpak*

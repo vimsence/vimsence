@@ -76,6 +76,7 @@ file_explorer_names = [
 ]
 
 ignored_file_types = -1
+ignored_files = -1
 ignored_directories = -1
 
 # Pre-initialization to deal with artifacts from slow initialization
@@ -97,12 +98,18 @@ def update_presence():
         return
 
     global ignored_file_types
+    global ignored_files
     global ignored_directories
 
     if ignored_file_types == -1:
         # Lazy init
         if vim.eval('exists("g:vimsence_ignored_file_types")') == '1':
             ignored_file_types = vim.eval('g:vimsence_ignored_file_types')
+        else:
+            ignored_file_types = []
+
+        if vim.eval('exists("g:vimsence_ignored_files")') == '1':
+            ignored_file_types = vim.eval('g:vimsence_ignored_files')
         else:
             ignored_file_types = []
 
@@ -138,8 +145,10 @@ def update_presence():
 
     details = editing_details.format(filename)
 
-    if u.contains(ignored_file_types, filetype) or u.contains(ignored_directories, directory):
-        # Priority #1: if the file type or folder is ignored, use the default activity to avoid exposing
+    if (u.contains(ignored_file_types, filetype) or
+            u.contains(ignored_files, filename) or
+            u.contains(ignored_directories, directory)):
+        # Priority #1: if the file type or filename or folder is ignored, use the default activity to avoid exposing
         # the folder or file.
         rpc_obj.set_activity(base_activity)
 
