@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import subprocess
 import time
 
 import rpc
@@ -256,8 +257,13 @@ def get_extension():
 
 
 def get_directory():
-    '''Get current directory
+    '''Get the current workspace directory, which is the git root when
+    available or just the current directory otherwise.
     :returns: string
     '''
 
-    return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
+    git_root = str(subprocess.Popen(['git', 'rev-parse', '--show-toplevel'],
+                   stdout=subprocess.PIPE).communicate()[0].rstrip(),
+                   encoding='utf-8')
+
+    return re.split(r'[\\/]', git_root if git_root != '' else vim.eval('getcwd()'))[-1]
