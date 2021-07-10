@@ -30,7 +30,7 @@ base_activity = {
     }
 }
 
-client_id = '439476230543245312'
+client_id = '863098248138719233'
 
 # Get the application id from vim configuration if there is one
 if vim.eval('exists("g:vimsence_client_id")') == '1':
