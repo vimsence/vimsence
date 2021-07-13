@@ -126,11 +126,20 @@ def update_presence():
     filetype = get_filetype()
 
     dir_list = get_asolute_dir_path()
+
     for i in range(len(dir_list), -1, -1):
         string ="/" + "/".join(dir_list[0:i])
+        url = None
         if '.git' in os.listdir(string):
-                print(string)
-
+            with open(string + "/.git/config", 'r') as f:
+                for line in f:
+                    if re.search("url", line):
+                        print(line)
+                        url = line
+                        break
+            if url:
+                break
+    
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
         editing_text = vim.eval('g:vimsence_editing_large_text')
