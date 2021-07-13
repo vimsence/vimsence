@@ -125,6 +125,11 @@ def update_presence():
     directory = get_directory()
     filetype = get_filetype()
 
+    dir_list = get_asolute_dir_path()
+    for i in range(len(dir_list), -1, -1):
+	    string ="/" + "/".join(dir_list[0:i])
+	    print(string)
+
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
         editing_text = vim.eval('g:vimsence_editing_large_text')
