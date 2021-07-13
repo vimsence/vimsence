@@ -127,8 +127,9 @@ def update_presence():
 
     dir_list = get_asolute_dir_path()
     for i in range(len(dir_list), -1, -1):
-	    string ="/" + "/".join(dir_list[0:i])
-	    print(string)
+        string ="/" + "/".join(dir_list[0:i])
+        if '.git' in os.listdir(string):
+                print(string)
 
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
