@@ -27,13 +27,10 @@ base_activity = {
     'assets': {
         'small_text': small_text,
         'small_image': small_image,
-    },
-    'buttons':[
-        {"label": "Click mee", 'url':"https://github.com/anurag3301/Clock-App"}
-    ]
+    }
 }
 
-client_id = '863098248138719233'
+client_id = '439476230543245312'
 
 # Get the application id from vim configuration if there is one
 if vim.eval('exists("g:vimsence_client_id")') == '1':

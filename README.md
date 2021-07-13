@@ -3,10 +3,9 @@
 </p>
 
 <p align="center">
-  <img src="https://i.postimg.cc/8PvMZFvz/13-07-21-19-41-56.png" width="400">
+  <img src="https://i.imgur.com/aL4g3nx.png" width="300">
+  <img src="https://i.imgur.com/nrhZj4O.png" width="300">
 </p>
-
-**A fork of vimsence with much better looking icons, support of more languages and also gonna add `Open Repository` button**
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine.
@@ -17,34 +16,34 @@ You need to have Vim/NeoVim with Python3 support
 
 ### Installing
 #### [Vim-Plug](https://github.com/junegunn/vim-plug)
-1. Add `Plug 'anurag3301/vimsence'` to your vimrc file.
+1. Add `Plug 'vimsence/vimsence'` to your vimrc file.
 2. Reload your vimrc or restart
 3. Run `:PlugInstall`
 
 #### [Vundle](https://github.com/VundleVim/Vundle.vim) or similar
-1. Add `Plugin 'anurag3301/vimsence'` to your vimrc file.
+1. Add `Plugin 'vimsence/vimsence'` to your vimrc file.
 2. Reload your vimrc or restart
 3. Run `:BundleInstall`
 
 #### [NeoBundle](https://github.com/Shougo/neobundle.vim)
-1. Add `NeoBundle 'anurag3301/vimsence'` to your vimrc file.
+1. Add `NeoBundle 'vimsence/vimsence'` to your vimrc file.
 2. Reload your vimrc or restart
 3. Run `:NeoUpdate`
 
 #### [Dein.vim](https://github.com/Shougo/dein.vim)
-1. Add `call dein#add('anurag3301/vimsence')` to your vimrc file.
+1. Add `call dein#add('vimsence/vimsence')` to your vimrc file.
 2. Reload your vimrc or restart
 3. Run `:call dein#install()`
 
 #### [Pathogen](https://github.com/tpope/vim-pathogen)
 ```sh
 cd ~/.vim/bundle
-git clone https://github.com/anurag3301/vimsence.git
+git clone https://github.com/vimsence/vimsence.git
 ```
 
 #### Vim8 packages
 ```sh
-git submodule add https://github.com/anurag3301/vimsence.git vimsence
+git submodule add https://github.com/vimsence/vimsence.git vimsence
 ```
 
 ## Configuration
@@ -83,7 +82,8 @@ pre-commit run --all-files
 ## Authors
 | Contributor                                                                                                                         | What has been done    |
 |-------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
-| <img src="https://avatars.githubusercontent.com/hugolgst" height=30px align=center>   [Hugo Lageneste](https://github.com/hugolgst) | Original work         |
+| <img src="https://avatars.githubusercontent.com/anned20" height=30px align=center>   [Anne Douwe Bouma](https://github.com/anned20) | Original work         |
+| <img src="https://avatars.githubusercontent.com/hugolgst" height=30px align=center>   [Hugo Lageneste](https://github.com/hugolgst) | Maintaining this fork |
 
 See also the list of [contributors](https://github.com/vimsence/vimsence/contributors) who participated in this project.
 
