@@ -27,7 +27,10 @@ base_activity = {
     'assets': {
         'small_text': small_text,
         'small_image': small_image,
-    }
+    },
+    'buttons':[
+        {'label': 'Click me', 'url': 'https://github.com/vimsence/vimsence'}
+    ]
 }
 
 client_id = '439476230543245312'
@@ -261,3 +264,9 @@ def get_directory():
     '''
 
     return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
+
+def get_asolute_dir_path():
+    '''Get absolute path of current dir
+    :return: list of directory in order
+    '''
+    return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
