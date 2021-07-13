@@ -27,7 +27,10 @@ base_activity = {
     'assets': {
         'small_text': small_text,
         'small_image': small_image,
-    }
+    },
+    'buttons':[
+        {"label": "Click mee", 'url':"https://github.com/anurag3301/Clock-App"}
+    ]
 }
 
 client_id = '863098248138719233'
