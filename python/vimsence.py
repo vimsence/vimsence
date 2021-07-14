@@ -300,7 +300,6 @@ def get_git_info():
         if '.git' in os.listdir(full_path):
             with open(full_path + "/.git/config", 'r') as f:
                 for line in f:
-                    print(line.strip())
                     dir_name = dir_list[i-1]
                     # Extract the url from HTTPS clone
                     if re.search("url = https:", line):
@@ -319,4 +318,5 @@ def get_git_info():
                         break
         if url:
             break
+        
     return [url, dir_name] if url and dir_name else None
