@@ -27,10 +27,7 @@ base_activity = {
     'assets': {
         'small_text': small_text,
         'small_image': small_image,
-    },
-    'buttons':[
-        {'label': 'Click me', 'url': 'https://github.com/vimsence/vimsence'}
-    ]
+    }
 }
 
 client_id = '439476230543245312'
@@ -120,7 +117,6 @@ def update_presence():
     large_text = ''
     details = ''
     state = ''
-    button = [{'label': 'View Repository', 'url': ''}]
 
     filename = get_filename()
     directory = get_directory()
@@ -188,6 +184,8 @@ def update_presence():
     activity['assets']['large_text'] = large_text
     activity['details'] = details
     activity['state'] = state
+    if git_info:
+        activity['buttons'] = [{'label': 'View Repository', 'url': git_info[0]}]
 
     try:
         rpc_obj.set_activity(activity)
