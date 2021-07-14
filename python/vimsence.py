@@ -120,11 +120,13 @@ def update_presence():
     large_text = ''
     details = ''
     state = ''
+    button = [{'label': 'View Repository', 'url': ''}]
 
     filename = get_filename()
     directory = get_directory()
     filetype = get_filetype()
 
+    git_info = get_git_info()
 
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
@@ -134,7 +136,7 @@ def update_presence():
     if vim.eval('exists("g:vimsence_editing_state")') == '1':
         editing_state = vim.eval('g:vimsence_editing_state')
 
-    state = editing_state.format(directory)
+    state = editing_state.format(git_info[1]) if git_info else editing_state.format(directory)
 
     editing_details = 'Editing {}'
     if vim.eval('exists("g:vimsence_editing_details")') == '1':
