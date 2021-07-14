@@ -125,20 +125,8 @@ def update_presence():
     directory = get_directory()
     filetype = get_filetype()
 
-    dir_list = get_asolute_dir_path()
+    git_info = get_git_info()
 
-    for i in range(len(dir_list), -1, -1):
-        string ="/" + "/".join(dir_list[0:i])
-        url = None
-        if '.git' in os.listdir(string):
-            with open(string + "/.git/config", 'r') as f:
-                for line in f:
-                    if re.search("url", line):
-                        url = re.findall('https://.*(?=.git)', line)[0]
-                        break
-        if url:
-            break
-    print(url)
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
         editing_text = vim.eval('g:vimsence_editing_large_text')
@@ -284,3 +272,20 @@ def get_asolute_dir_path():
     :return: list of directory in order
     '''
     return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
+
+def get_git_info():
+    dir_list = get_asolute_dir_path()
+    for i in range(len(dir_list), -1, -1):
+        string ="/" + "/".join(dir_list[0:i])
+        url = None
+        dir_name = None
+        if '.git' in os.listdir(string):
+            with open(string + "/.git/config", 'r') as f:
+                for line in f:
+                    if re.search("url", line):
+                        url = re.findall('https://.*(?=.git)', line)[0]
+                        dir_name = dir_list[i-1]
+                        break
+        if url:
+            break
+    return [url, dir_name] if url and dir_name else None
