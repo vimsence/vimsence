@@ -283,6 +283,15 @@ def get_git_info():
     url = None
     dir_name = None
 
+def get_git_info():
+    ''' This funtion return a Git Repo link and the Repo dir name in form of list
+    else return None if it is not able to extract the Repo Url
+    '''
+
+    dir_list = get_dir_path()
+    url = None
+    dir_name = None
+
     for i in range(len(dir_list), 0, -1):
         if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
             break
@@ -291,8 +300,8 @@ def get_git_info():
         if '.git' in os.listdir(full_path):
             with open(full_path + "/.git/config", 'r') as f:
                 for line in f:
+                    print(line.strip())
                     dir_name = dir_list[i-1]
-
                     # Extract the url from HTTPS clone
                     if re.search("url = https:", line):
                         url = re.findall('https://.*', line)[0].removesuffix(".git").replace('anurag3301@', '')
@@ -300,10 +309,13 @@ def get_git_info():
 
                     # Extract the url from SSH clone
                     if re.search("url = git@", line):
-                        website = re.findall('git@.*(?=.com)', line)[0].removeprefix("git@")
-                        username = re.findall('.com:.*(?=/)', line)[0].removeprefix(".com:")
+                        website = re.findall('git@.*(?=.com|.org)', line)[0].removeprefix("git@")
+                        if website == 'bitbucket':
+                            username = re.findall('.org:.*(?=/)', line)[0].removeprefix(".org:")
+                        else:
+                            username = re.findall('.com:.*(?=/)', line)[0].removeprefix(".com:")
                         repo_name = re.findall('/.*(?=.git)', line)[0].removeprefix("/")
-                        url = "https://{}.com/{}/{}".format(website, username, repo_name)
+                        url = "https://{}.{}/{}/{}".format(website, "org" if website=='bitbucket' else "com", username, repo_name)
                         break
         if url:
             break
