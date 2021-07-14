@@ -281,9 +281,15 @@ def get_git_info():
         if '.git' in os.listdir(string):
             with open(string + "/.git/config", 'r') as f:
                 for line in f:
-                    if re.search("url", line):
+                    dir_name = dir_list[i-1]
+                    if re.search("url = https:", line):
                         url = re.findall('https://.*', line)[0].strip(".git")
-                        dir_name = dir_list[i-1]
+                        break
+                    if re.search("url = git@", line):
+                        website = re.findall('git@.*(?=.com)', line)[0].removeprefix("git@")
+                        username = re.findall('.com:.*(?=/)', line)[0].removeprefix(".com:")
+                        repo_name = re.findall('/.*(?=.git)', line)[0].removeprefix("/")
+                        url = "https://{}.com/{}/{}".format(website, username, repo_name)
                         break
         if url:
             break
