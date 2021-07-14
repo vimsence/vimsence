@@ -266,14 +266,20 @@ def get_directory():
 
     return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
 
-def get_asolute_dir_path():
-    '''Get absolute path of current dir
+def get_dir_path():
+    '''Get absolute path of current dir in form of list
     :return: list of directory in order
+    eg: INPUT : "/home/anurag/.vim/bundle/vimsence/python"
+        OUTOUT: ['home', 'anurag', '.vim', 'bundle', 'vimsence', 'python']
     '''
     return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
 
 def get_git_info():
-    dir_list = get_asolute_dir_path()
+    ''' This funtion return a Git Repo link and the Repo dir name in form of list
+    else return None if it is not able to extract the Repo Url
+    '''
+
+    dir_list = get_dir_path()
     url = None
     dir_name = None
     
@@ -281,14 +287,18 @@ def get_git_info():
         if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
             break
         
-        string ="/" + "/".join(dir_list[0:i])
-        if '.git' in os.listdir(string):
-            with open(string + "/.git/config", 'r') as f:
+        full_path ="/" + "/".join(dir_list[0:i])
+        if '.git' in os.listdir(full_path):
+            with open(full_path + "/.git/config", 'r') as f:
                 for line in f:
                     dir_name = dir_list[i-1]
+
+                    # Extract the url from HTTPS clone
                     if re.search("url = https:", line):
                         url = re.findall('https://.*', line)[0].strip(".git")
                         break
+
+                    # Extract the url from SSH clone
                     if re.search("url = git@", line):
                         website = re.findall('git@.*(?=.com)', line)[0].removeprefix("git@")
                         username = re.findall('.com:.*(?=/)', line)[0].removeprefix(".com:")
