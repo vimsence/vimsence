@@ -276,7 +276,11 @@ def get_git_info():
     dir_list = get_asolute_dir_path()
     url = None
     dir_name = None
-    for i in range(len(dir_list), -1, -1):
+    
+    for i in range(len(dir_list), 0, -1):
+        if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
+            break
+        
         string ="/" + "/".join(dir_list[0:i])
         if '.git' in os.listdir(string):
             with open(string + "/.git/config", 'r') as f:
