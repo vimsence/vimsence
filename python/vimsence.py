@@ -134,12 +134,11 @@ def update_presence():
             with open(string + "/.git/config", 'r') as f:
                 for line in f:
                     if re.search("url", line):
-                        print(line)
-                        url = line
+                        url = re.findall('https://.*(?=.git)', line)[0]
                         break
-            if url:
-                break
-    
+        if url:
+            break
+    print(url)
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
         editing_text = vim.eval('g:vimsence_editing_large_text')
