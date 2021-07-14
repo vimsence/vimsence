@@ -273,16 +273,7 @@ def get_dir_path():
         OUTOUT: ['home', 'anurag', '.vim', 'bundle', 'vimsence', 'python']
     '''
     return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
-
-def get_git_info():
-    ''' This funtion return a Git Repo link and the Repo dir name in form of list
-    else return None if it is not able to extract the Repo Url
-    '''
-
-    dir_list = get_dir_path()
-    url = None
-    dir_name = None
-
+    
 def get_git_info():
     ''' This funtion return a Git Repo link and the Repo dir name in form of list
     else return None if it is not able to extract the Repo Url
@@ -318,5 +309,5 @@ def get_git_info():
                         break
         if url:
             break
-        
+
     return [url, dir_name] if url and dir_name else None
