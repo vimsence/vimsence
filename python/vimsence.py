@@ -282,12 +282,12 @@ def get_git_info():
     dir_list = get_dir_path()
     url = None
     dir_name = None
-    
+
     for i in range(len(dir_list), 0, -1):
         if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
             break
-        
-        full_path ="/" + "/".join(dir_list[0:i])
+
+        full_path = "/" + "/".join(dir_list[0:i])
         if '.git' in os.listdir(full_path):
             with open(full_path + "/.git/config", 'r') as f:
                 for line in f:
@@ -295,7 +295,7 @@ def get_git_info():
 
                     # Extract the url from HTTPS clone
                     if re.search("url = https:", line):
-                        url = re.findall('https://.*', line)[0].strip(".git")
+                        url = re.findall('https://.*', line)[0].removesuffix(".git").replace('anurag3301@', '')
                         break
 
                     # Extract the url from SSH clone
