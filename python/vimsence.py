@@ -125,7 +125,6 @@ def update_presence():
     directory = get_directory()
     filetype = get_filetype()
 
-    git_info = get_git_info()
 
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
@@ -275,15 +274,15 @@ def get_asolute_dir_path():
 
 def get_git_info():
     dir_list = get_asolute_dir_path()
+    url = None
+    dir_name = None
     for i in range(len(dir_list), -1, -1):
         string ="/" + "/".join(dir_list[0:i])
-        url = None
-        dir_name = None
         if '.git' in os.listdir(string):
             with open(string + "/.git/config", 'r') as f:
                 for line in f:
                     if re.search("url", line):
-                        url = re.findall('https://.*(?=.git)', line)[0]
+                        url = re.findall('https://.*', line)[0].strip(".git")
                         dir_name = dir_list[i-1]
                         break
         if url:
