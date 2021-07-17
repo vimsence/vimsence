@@ -3,7 +3,7 @@ import logging
 import os
 import re
 import time
-
+import subprocess
 import rpc
 import utils as u
 import vim
@@ -267,49 +267,42 @@ def get_directory():
     return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
 
 
-def get_dir_path():
-    '''Get absolute path of current dir in form of list
-    :return: list of directory in order
-    eg: INPUT : "/home/anurag/.vim/bundle/vimsence/python"
-        OUTOUT: ['home', 'anurag', '.vim', 'bundle', 'vimsence', 'python']
-    '''
-    return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
-
-
 def get_git_info():
     ''' This funtion return a Git Repo link and the Repo dir name in form of list
     else return None if it is not able to extract the Repo Url
     '''
 
-    dir_list = get_dir_path()
     url = None
-    dir_name = None
+    repo_name = None
+    cwd = vim.eval('getcwd()')
 
-    for i in range(len(dir_list), 0, -1):
-        if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
-            break
+    os.chdir(cwd)
+    git_dir = subprocess.run(['git rev-parse --git-dir'], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, text=True, shell=True)
 
-        full_path = '/' + '/'.join(dir_list[0:i])
-        if '.git' in os.listdir(full_path):
-            with open(full_path + '/.git/config', 'r') as f:
-                for line in f:
-                    dir_name = dir_list[i-1]
-                    # Extract the url from HTTPS clone
-                    if re.search(r'url = https:', line):
-                        url_temp = re.findall(r'https://.*(?=\.git)', line)
-                        if not url_temp:
-                            break
-                        url = re.sub(r'(?<=//).+@', '', url_temp[0])
-                        break
+    if git_dir.stderr:
+        return None
 
-                    # Extract the url from SSH clone
-                    if re.search(r'url = git@', line):
-                        url_temp = re.findall(r'(?<=git@).+\..+:.+/.+(?=\.git)', line)
-                        if not url_temp:
-                            break
-                        url = 'https://' + re.sub(':', '/', url_temp[0])
-                        break
-        if url:
-            break
+    else:
+        git_addr = subprocess.run(['git config --get remote.origin.url'],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
 
-    return [url, dir_name] if url and dir_name else None
+        if git_addr.stdout:
+            addr = git_addr.stdout
+
+            # Extract the url from HTTPS clone
+            if re.search(r'https:', addr):
+                url_temp = re.findall(r'https://.*(?=\.git)', addr)
+                url = re.sub(r'(?<=//).+@', '', url_temp[0])
+
+            # Extract the url from SSH clone
+            if re.search('git@', addr):
+                url_temp = re.findall(r'(?<=git@).+\..+:.+/.+(?=\.git)', addr)
+                url = 'https://' + re.sub(':', '/', url_temp[0])
+
+            repo_name = re.split(r'[\\/]', url)[-1]
+
+            return [url, repo_name] if url and repo_name else None
+
+        else:
+            return None
