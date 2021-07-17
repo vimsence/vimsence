@@ -303,16 +303,11 @@ def get_git_info():
                         break
 
                     # Extract the url from SSH clone
-                    if re.search('url = git@', line):
-                        website = re.findall('git@.*(?=.com|.org)', line)[0].removeprefix('git@')
-
-                        if website == 'bitbucket':
-                            username = re.findall('.org:.*(?=/)', line)[0].removeprefix('.org:')
-                        else:
-                            username = re.findall('.com:.*(?=/)', line)[0].removeprefix('.com:')
-                        repo_name = re.findall('/.*(?=.git)', line)[0].removeprefix('/')
-                        top_level_domain = 'org' if website == 'bitbucket' else 'com'
-                        url = 'https://{}.{}/{}/{}'.format(website, top_level_domain, username, repo_name)
+                    if re.search(r'url = git@', line):
+                        url_temp = re.findall(r'(?<=git@).+\..+:.+/.+(?=\.git)', line)
+                        if not url_temp:
+                            break
+                        url = 'https://' + re.sub(':', '/', url_temp[0])
                         break
         if url:
             break
