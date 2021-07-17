@@ -3,7 +3,7 @@ import logging
 import os
 import re
 import time
-
+import subprocess
 import rpc
 import utils as u
 import vim
@@ -122,6 +122,8 @@ def update_presence():
     directory = get_directory()
     filetype = get_filetype()
 
+    git_info = get_git_info()
+
     editing_text = 'Editing a {} file'
     if vim.eval('exists("g:vimsence_editing_large_text")') == '1':
         editing_text = vim.eval('g:vimsence_editing_large_text')
@@ -130,7 +132,7 @@ def update_presence():
     if vim.eval('exists("g:vimsence_editing_state")') == '1':
         editing_state = vim.eval('g:vimsence_editing_state')
 
-    state = editing_state.format(directory)
+    state = editing_state.format(git_info[1]) if git_info else editing_state.format(directory)
 
     editing_details = 'Editing {}'
     if vim.eval('exists("g:vimsence_editing_details")') == '1':
@@ -182,6 +184,8 @@ def update_presence():
     activity['assets']['large_text'] = large_text
     activity['details'] = details
     activity['state'] = state
+    if git_info:
+        activity['buttons'] = [{'label': 'View Repository', 'url': git_info[0]}]
 
     try:
         rpc_obj.set_activity(activity)
@@ -261,3 +265,44 @@ def get_directory():
     '''
 
     return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
+
+
+def get_git_info():
+    ''' This funtion return a Git Repo link and the Repo dir name in form of list
+    else return None if it is not able to extract the Repo Url
+    '''
+
+    url = None
+    repo_name = None
+    cwd = vim.eval('getcwd()')
+
+    os.chdir(cwd)
+    git_dir = subprocess.run(['git rev-parse --git-dir'], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, text=True, shell=True)
+
+    if git_dir.stderr:
+        return None
+
+    else:
+        git_addr = subprocess.run(['git config --get remote.origin.url'],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
+
+        if git_addr.stdout:
+            addr = git_addr.stdout
+
+            # Extract the url from HTTPS clone
+            if re.search(r'https:', addr):
+                url_temp = re.findall(r'https://.*(?=\.git)', addr)
+                url = re.sub(r'(?<=//).+@', '', url_temp[0])
+
+            # Extract the url from SSH clone
+            if re.search('git@', addr):
+                url_temp = re.findall(r'(?<=git@).+\..+:.+/.+(?=\.git)', addr)
+                url = 'https://' + re.sub(':', '/', url_temp[0])
+
+            repo_name = re.split(r'[\\/]', url)[-1]
+
+            return [url, repo_name] if url and repo_name else None
+
+        else:
+            return None
