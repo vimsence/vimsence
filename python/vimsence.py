@@ -295,8 +295,9 @@ def get_git_info():
                 for line in f:
                     dir_name = dir_list[i-1]
                     # Extract the url from HTTPS clone
-                    if re.search('url = https:', line):
-                        url = re.findall('https://.*', line)[0].removesuffix('.git').replace('anurag3301@', '')
+                    if re.search(r'url = https:', line):
+                        url = re.findall(r'https://.*(?=\.git)', line)[0]
+                        url = re.sub(r'(?<=//).+@', '', url)
                         break
 
                     # Extract the url from SSH clone
