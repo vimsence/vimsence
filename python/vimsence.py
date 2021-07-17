@@ -266,6 +266,7 @@ def get_directory():
 
     return re.split(r'[\\/]', vim.eval('getcwd()'))[-1]
 
+
 def get_dir_path():
     '''Get absolute path of current dir in form of list
     :return: list of directory in order
@@ -273,7 +274,8 @@ def get_dir_path():
         OUTOUT: ['home', 'anurag', '.vim', 'bundle', 'vimsence', 'python']
     '''
     return re.split(r'[\\/]', vim.eval('getcwd()'))[1:]
-    
+
+
 def get_git_info():
     ''' This funtion return a Git Repo link and the Repo dir name in form of list
     else return None if it is not able to extract the Repo Url
@@ -287,25 +289,27 @@ def get_git_info():
         if dir_list[i-1] == os.environ['USER'] or dir_list[i-1] == 'root':
             break
 
-        full_path = "/" + "/".join(dir_list[0:i])
+        full_path = '/' + '/'.join(dir_list[0:i])
         if '.git' in os.listdir(full_path):
-            with open(full_path + "/.git/config", 'r') as f:
+            with open(full_path + '/.git/config', 'r') as f:
                 for line in f:
                     dir_name = dir_list[i-1]
                     # Extract the url from HTTPS clone
-                    if re.search("url = https:", line):
-                        url = re.findall('https://.*', line)[0].removesuffix(".git").replace('anurag3301@', '')
+                    if re.search('url = https:', line):
+                        url = re.findall('https://.*', line)[0].removesuffix('.git').replace('anurag3301@', '')
                         break
 
                     # Extract the url from SSH clone
-                    if re.search("url = git@", line):
-                        website = re.findall('git@.*(?=.com|.org)', line)[0].removeprefix("git@")
+                    if re.search('url = git@', line):
+                        website = re.findall('git@.*(?=.com|.org)', line)[0].removeprefix('git@')
+
                         if website == 'bitbucket':
-                            username = re.findall('.org:.*(?=/)', line)[0].removeprefix(".org:")
+                            username = re.findall('.org:.*(?=/)', line)[0].removeprefix('.org:')
                         else:
-                            username = re.findall('.com:.*(?=/)', line)[0].removeprefix(".com:")
-                        repo_name = re.findall('/.*(?=.git)', line)[0].removeprefix("/")
-                        url = "https://{}.{}/{}/{}".format(website, "org" if website=='bitbucket' else "com", username, repo_name)
+                            username = re.findall('.com:.*(?=/)', line)[0].removeprefix('.com:')
+                        repo_name = re.findall('/.*(?=.git)', line)[0].removeprefix('/')
+                        top_level_domain = 'org' if website == 'bitbucket' else 'com'
+                        url = 'https://{}.{}/{}/{}'.format(website, top_level_domain, username, repo_name)
                         break
         if url:
             break
