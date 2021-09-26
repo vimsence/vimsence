@@ -53,6 +53,10 @@
       "icon": "md"
     },
     {
+      "name": "nasm",
+      "icon": "nasm"
+    },
+    {
       "name": "nim"
     },
     {
