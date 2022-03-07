@@ -66,6 +66,7 @@ file_explorers = [
     'nerdtree',
     'vimfiler',
     'netrw',
+    'NvimTree',
 ]
 
 # Fallbacks if, for some reason, the filetype isn't detected.
@@ -73,6 +74,7 @@ file_explorer_names = [
     'vimfiler:default',
     'NERD_tree_',
     'NetrwTreeListing',
+    'NvimTree',
 ]
 
 ignored_file_types = -1
