@@ -56,8 +56,7 @@
       "name": "nim"
     },
     {
-      "name": "ocaml",
-      "icon": "ml"
+      "name": "ocaml"
     },
     {
       "name": "paco"
