@@ -122,6 +122,42 @@ The option also makes it possible to bypass symlinking entirely.
 TL;DR: `let g:vimsence_discord_flatpak=1` to fix issues with Flatpak and
 Discord's RPC socket
 
+------------------------------------------------------------------------------
+                                                  *g:vimsence_discord_snap*
+                                                             *VimSenceSnap*
+Support for Snap ~
+
+(Note: This only applies to Linux, and specifically distros Snap supports.
+ Having the option enabled on Linux without running the snap version will
+ cause the connection to fail)
+
+Snap support can be enabled with:
+>
+    let g:vimsence_discord_snap=1
+>
+Discord's Snap package exports its socket differently. Without
+`let g:vimsence_discord_snap=1`, vimsence will try to connect to the
+location the non-snap version exports its socket. This is typically
+`$XDG_RUNTIME_DIR`. The Snap version of Discord is forced to export the RPC
+socket under `$XDG_RUNTIME_DIR/snap.discord/` because of how the
+sandboxing works. Unfortunately, this breaks vimsence, because the socket is
+set up in a different location than expected.
+
+A typical way to work around this is by symlinking the socket where it
+normally would be, but since the directory is deleted and regenerated on
+login/logout, it becomes inefficient.
+
+This is where `g:vimsence_discord_snap` comes in. With the option enabled,
+vimsence will connect to the socket by looking for the socket where the Snap
+version exports it. This is covered in slightly more detail on Discord's snap
+wiki:
+https://github.com/flathub/com.discordapp.Discord/wiki/Rich-Precense-(discord-rpc)
+
+The option also makes it possible to bypass symlinking entirely.
+
+TL;DR: `let g:vimsence_discord_snap=1` to fix issues with Snap and
+Discord's RPC socket
+
 ==============================================================================
 3. License                                                   *VimSenceLicense*
 

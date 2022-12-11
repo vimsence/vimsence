@@ -214,12 +214,19 @@ class UnixDiscordIpcClient(DiscordIpcClient):
         self._sock.settimeout(3)
         pipe_pattern = self._get_pipe_pattern()
         flatpak_support = vim.eval('g:vimsence_discord_flatpak')
+        snap_support = vim.eval('g:vimsence_discord_snap')
         position = ''
         if flatpak_support == '1':
             # if flatpak support is enabled, prefix the IPC socket name
             # with app/com.discordapp.Discord/. This is to mitigate the non-standard
             # location in a way that doesn't require symlinks right after boot
             position = 'app/com.discordapp.Discord/'
+        elif snap_support == '1':
+            # if you install discord via snap you can use the same behavior as flatpak
+            # just add let g:vimsence_discord_snap=1 to your .vimrc it should work,
+            # you dont need a symlink to make it work should work out of the box.
+            position = 'snap.discord/'
+
         for i in range(10):
             path = pipe_pattern.format(position, i)
 
